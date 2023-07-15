@@ -68,6 +68,21 @@ def keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month) -
     return {k: max(v) for k, v in intervals.items()}
 
 
+def compute_first_rought_estimate(progress, estimation_interval_in_month):
+    dates = sorted(progress.keys())
+    min_date = min(dates)
+    months_before_first_evaluation = 3
+    first_month_of_work = min_date + relativedelta(months=months_before_first_evaluation)
+
+    def is_in_first_month(d):
+        return d < first_month_of_work
+
+    last_date_in_first_month = max(filter(is_in_first_month, dates))
+
+    # We wait for 1 month, and then we project to the end of the estimation interval
+    return progress[last_date_in_first_month] / months_before_first_evaluation * estimation_interval_in_month
+
+
 def no_estimates_projection(progress: dict[datetime:int]) -> dict[datetime:int]:
     estimation_interval_in_month = 6
 
@@ -76,11 +91,16 @@ def no_estimates_projection(progress: dict[datetime:int]) -> dict[datetime:int]:
     dates = sorted(progress.keys())
     min_date = min(dates)
 
+    # We start at origin in order to print the full graph
+    estimates = {min_date: 0}
+
     # To draw the start of estimation line, first we draw first date when we're estimating.
     estimation_start = min_date + relativedelta(months=estimation_interval_in_month)
-    estimates = {estimation_start: min(grouped.values())}
-    previous_value = 0
 
+    first_rought_estimate = compute_first_rought_estimate(progress, estimation_interval_in_month)
+    estimates[estimation_start] = first_rought_estimate
+
+    previous_value = 0
     for index, value in grouped.items():
         d = min_date + relativedelta(months=(index + 2) * estimation_interval_in_month)
         issues_closed_last_6_month = value - previous_value

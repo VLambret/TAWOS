@@ -69,14 +69,16 @@ def keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month) -
 
 
 def no_estimates_projection(progress: dict[datetime:int]) -> dict[datetime:int]:
-    estimation_interval_in_month = 3
+    estimation_interval_in_month = 6
 
     grouped = keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month)
 
     dates = sorted(progress.keys())
     min_date = min(dates)
 
-    estimates = {}
+    # To draw the start of estimation line, first we draw first date when we're estimating.
+    estimation_start = min_date + relativedelta(months=estimation_interval_in_month)
+    estimates = {estimation_start: min(grouped.values())}
     previous_value = 0
 
     for index, value in grouped.items():
@@ -97,7 +99,7 @@ def show_graph(progress, estimates):
     estimates_values = list(estimates.values())
 
     plt.plot(progress_dates, progress_values)
-    plt.plot(estimates_dates, estimates_values)
+    plt.plot(estimates_dates, estimates_values, marker='o')
 
     plt.xlabel('Date')
     plt.ylabel('# of Completed issues')

@@ -1,8 +1,11 @@
+from typing import Dict
+
 import matplotlib.pyplot as plt
 from collections import Counter
 from datetime import datetime
 
 import mysql.connector
+from dateutil.relativedelta import relativedelta
 
 
 class Tawos:
@@ -34,7 +37,7 @@ class Tawos:
         return self.query(query)
 
 
-def count_occurrences(dates: list[datetime]):
+def count_occurrences(dates: list[datetime]) -> dict[datetime:int]:
     dates = [date.strftime("%Y-%m-%d") for date in dates]
 
     counter = dict(Counter(dates))
@@ -45,15 +48,56 @@ def count_occurrences(dates: list[datetime]):
         issue_closed += counter[k]
         result[k] = issue_closed
 
-    return {datetime.strptime(d, "%Y-%m-%d"):v for d,v in result.items()}
+    return {datetime.strptime(d, "%Y-%m-%d"): v for d, v in result.items()}
 
-def show_graph(data):
-    dates = list(data.keys())
-    values = list(data.values())
 
-    date_labels = dates
+def keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month) -> dict[datetime:int]:
+    intervals = {}
+    dates = sorted(progress.keys())
 
-    plt.plot(date_labels, values)
+    min_date = min(dates)
+    for date in dates:
+        delta = relativedelta(date, min_date)
+        months = (delta.years * 12 + delta.months)
+        index = int(months / estimation_interval_in_month)
+
+        if index not in intervals:
+            intervals[index] = []
+        intervals[index].append(progress[date])
+
+    return {k: max(v) for k, v in intervals.items()}
+
+
+def no_estimates_projection(progress: dict[datetime:int]) -> dict[datetime:int]:
+    estimation_interval_in_month = 3
+
+    grouped = keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month)
+
+    dates = sorted(progress.keys())
+    min_date = min(dates)
+
+    estimates = {}
+    previous_value = 0
+
+    for index, value in grouped.items():
+        d = min_date + relativedelta(months=(index + 2) * estimation_interval_in_month)
+        issues_closed_last_6_month = value - previous_value
+        v = value + issues_closed_last_6_month
+        previous_value = value
+        estimates[d] = v
+
+    return estimates
+
+
+def show_graph(progress, estimates):
+    progress_dates = list(progress.keys())
+    progress_values = list(progress.values())
+
+    estimates_dates = list(estimates.keys())
+    estimates_values = list(estimates.values())
+
+    plt.plot(progress_dates, progress_values)
+    plt.plot(estimates_dates, estimates_values)
 
     plt.xlabel('Date')
     plt.ylabel('# of Completed issues')
@@ -71,6 +115,7 @@ for table in tables:
 issues = tawos.get_issues()
 resolutions_dates = [i['Resolution_Date'] for i in issues]
 progress = count_occurrences(resolutions_dates)
-show_graph(progress)
+estimates = no_estimates_projection(progress)
+show_graph(progress, estimates)
 
 print(issues[0])

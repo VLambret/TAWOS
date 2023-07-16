@@ -7,18 +7,19 @@ from dateutil.relativedelta import relativedelta
 from tawos import Tawos
 
 
-def count_occurrences(dates: list[datetime]) -> dict[datetime:int]:
-    dates = [date.strftime("%Y-%m-%d") for date in dates]
+class IssuesGroupedByDay:
+    def __init__(self, dates: list[datetime]):
+        dates = [date.strftime("%Y-%m-%d") for date in dates]
 
-    counter = dict(Counter(dates))
+        counter = dict(Counter(dates))
 
-    result = {}
-    issue_closed = 0
-    for k in sorted(counter.keys()):
-        issue_closed += counter[k]
-        result[k] = issue_closed
+        issue_closed = 0
+        self.grouped_issues = {}
+        for k in sorted(counter.keys()):
+            issue_closed += counter[k]
+            self.grouped_issues[k] = issue_closed
 
-    return {datetime.strptime(d, "%Y-%m-%d"): v for d, v in result.items()}
+        self.grouped_issues = {datetime.strptime(d, "%Y-%m-%d"): v for d, v in self.grouped_issues.items()}
 
 
 def keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month) -> dict[datetime:int]:
@@ -53,7 +54,8 @@ def compute_first_rought_estimate(progress, estimation_interval_in_month):
     return progress[last_date_in_first_month] / months_before_first_evaluation * estimation_interval_in_month
 
 
-def no_estimates_projection(progress: dict[datetime:int]) -> dict[datetime:int]:
+def no_estimates_projection(grouped_issues: IssuesGroupedByDay) -> dict[datetime:int]:
+    progress: dict[datetime:int] = grouped_issues.grouped_issues
     estimation_interval_in_month = 6
 
     grouped = keep_last_value_at_fixed_intervals(progress, estimation_interval_in_month)
@@ -97,15 +99,14 @@ def show_graph(progress, estimates):
 
     plt.show()
 
-
 def main():
     projects = Tawos().get_projects()
 
     issues = projects[0].get_issues()
     resolutions_dates = [i.resolution_date for i in issues]
-    progress = count_occurrences(resolutions_dates)
+    progress = IssuesGroupedByDay(resolutions_dates)
     estimates = no_estimates_projection(progress)
-    show_graph(progress, estimates)
+    show_graph(progress.grouped_issues, estimates)
     print(issues[0])
 
 

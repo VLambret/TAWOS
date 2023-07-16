@@ -1,40 +1,10 @@
-from typing import Dict
-
 import matplotlib.pyplot as plt
 from collections import Counter
 from datetime import datetime
 
-import mysql.connector
 from dateutil.relativedelta import relativedelta
 
-
-class Tawos:
-    def __init__(self):
-        self.connexion = mysql.connector.connect(
-            host="localhost",
-            user="tawos",
-            password="tawospass",
-            database="tawos",
-        )
-
-        self.cursor = self.connexion.cursor(dictionary=True)
-
-    def get_tables(self):
-        query = "SHOW TABLES;"
-        return self.query(query)
-
-    def query(self, query):
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
-
-    def get_issues(self):
-        query = """
-            Select Issue.ID, Issue.Creation_Date, Issue.Last_Updated, Issue.Resolution_Date , Issue.Story_Point, Issue.Story_Point_Changed_After_Estimation
-            from Issue
-            WHERE Issue.Project_ID = 1 AND Issue.Status = "Done" and Issue.Resolution = "Complete";
-        """
-
-        return self.query(query)
+from tawos import Tawos
 
 
 def count_occurrences(dates: list[datetime]) -> dict[datetime:int]:
@@ -128,16 +98,15 @@ def show_graph(progress, estimates):
     plt.show()
 
 
-tawos = Tawos()
-tables = tawos.get_tables()
+def main():
+    projects = Tawos().get_projects()
 
-for table in tables:
-    print(table)
+    issues = projects[0].get_issues()
+    resolutions_dates = [i.resolution_date for i in issues]
+    progress = count_occurrences(resolutions_dates)
+    estimates = no_estimates_projection(progress)
+    show_graph(progress, estimates)
+    print(issues[0])
 
-issues = tawos.get_issues()
-resolutions_dates = [i['Resolution_Date'] for i in issues]
-progress = count_occurrences(resolutions_dates)
-estimates = no_estimates_projection(progress)
-show_graph(progress, estimates)
 
-print(issues[0])
+main()

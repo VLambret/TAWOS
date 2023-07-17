@@ -84,34 +84,39 @@ def no_estimates_projection(grouped_issues: IssuesGroupedByDay) -> dict[datetime
     return estimates
 
 
-def show_graph(progress, estimates):
-    progress_dates = list(progress.keys())
-    progress_values = list(progress.values())
+def show_graph(project_name: str, real_progress, estimates):
+    progress_dates = list(real_progress.keys())
+    progress_values = list(real_progress.values())
 
     estimates_dates = list(estimates.keys())
     estimates_values = list(estimates.values())
 
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
-
     figure_axis = figure.add_subplot()
-    figure.suptitle('Completed issues over time')
+    figure.suptitle(f'{project_name} - Completed issues over time')
 
     figure_axis.set_xlabel('Date')
     figure_axis.set_ylabel('# of Completed issues')
 
     figure_axis.plot(progress_dates, progress_values)
     figure_axis.plot(estimates_dates, estimates_values, marker='o')
-    figure.savefig("graph.png", dpi=300)
+    figure.savefig(f"{project_name.replace(' ', '_')}.png", dpi=300)
+
+
+def plot_real_progress_and_estimates(project):
+    issues = project.get_issues()
+    resolutions_dates = [i.resolution_date for i in issues]
+    progress = IssuesGroupedByDay(resolutions_dates)
+    estimates = no_estimates_projection(progress)
+    show_graph(project.name, progress.grouped_issues, estimates)
+
 
 def main():
     projects = Tawos().get_projects()
 
-    issues = projects[0].get_issues()
-    resolutions_dates = [i.resolution_date for i in issues]
-    progress = IssuesGroupedByDay(resolutions_dates)
-    estimates = no_estimates_projection(progress)
-    show_graph(progress.grouped_issues, estimates)
+    project = projects[0]
+    plot_real_progress_and_estimates(project)
 
 
 main()

@@ -1,3 +1,4 @@
+import matplotlib.figure
 import matplotlib.pyplot as plt
 from collections import Counter
 from datetime import datetime
@@ -90,14 +91,18 @@ def show_graph(progress, estimates):
     estimates_dates = list(estimates.keys())
     estimates_values = list(estimates.values())
 
-    plt.plot(progress_dates, progress_values)
-    plt.plot(estimates_dates, estimates_values, marker='o')
+    figure = matplotlib.figure.Figure(figsize=(8, 6))
 
-    plt.xlabel('Date')
-    plt.ylabel('# of Completed issues')
-    plt.title('Completed issues over time')
 
-    plt.show()
+    figure_axis = figure.add_subplot()
+    figure.suptitle('Completed issues over time')
+
+    figure_axis.set_xlabel('Date')
+    figure_axis.set_ylabel('# of Completed issues')
+
+    figure_axis.plot(progress_dates, progress_values)
+    figure_axis.plot(estimates_dates, estimates_values, marker='o')
+    figure.savefig("graph.png", dpi=300)
 
 def main():
     projects = Tawos().get_projects()
@@ -107,7 +112,6 @@ def main():
     progress = IssuesGroupedByDay(resolutions_dates)
     estimates = no_estimates_projection(progress)
     show_graph(progress.grouped_issues, estimates)
-    print(issues[0])
 
 
 main()

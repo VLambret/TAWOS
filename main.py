@@ -113,8 +113,6 @@ def plot_real_progress_and_estimates(project):
 
 def main():
     projects = Tawos().get_projects()
-    plot_real_progress_and_estimates(projects[1])
-    return
     for project in projects:
         print(f"Analysing project {project.name}")
         try:

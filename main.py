@@ -105,6 +105,7 @@ def show_graph(project_name: str, real_progress, estimates):
 
 
 def plot_real_progress_and_estimates(project):
+    print(f"Analysing project {project}")
     issues = project.get_issues()
     resolutions_dates = [i.resolution_date for i in issues]
     progress = IssuesGroupedByDay(resolutions_dates)
@@ -113,10 +114,11 @@ def plot_real_progress_and_estimates(project):
 
 
 def main():
-    projects = Tawos().get_projects()
-
-    project = projects[0]
-    plot_real_progress_and_estimates(project)
+    for project in Tawos().get_projects():
+        try:
+            plot_real_progress_and_estimates(project)
+        except:
+            print(f"ERROR ON PROJECT {project.name}")
 
 
 main()

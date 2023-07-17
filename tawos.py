@@ -38,7 +38,8 @@ class Issue:
             return issue_data['Last_Updated']
 
     def get_done_status(self, status):
-        return status in ["Done", "Closed", "Resolved", "Accepted"]
+        # List determined using stats on all issue status
+        return status in ["Done", "Closed", "Resolved", "Complete"]
 
 
 class Project:
@@ -66,6 +67,16 @@ class Project:
 class Tawos:
     def __init__(self):
         pass
+
+    def show_status_stats_on_all_projects(self):
+        query = """
+            SELECT Status, COUNT(*) AS Count
+            FROM Issue
+            GROUP BY Status;
+        """
+        status_stats = db.query(query)
+        for stat in status_stats:
+            print(f'{stat["Count"]}:{stat["Status"]}')
 
     def get_projects(self) -> list[Project]:
         query = "Select * from Project;"

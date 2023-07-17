@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 from collections import Counter
 from datetime import datetime
 
@@ -100,7 +102,7 @@ def show_graph(project_name: str, real_progress, estimates):
 
     figure_axis.plot(progress_dates, progress_values)
     figure_axis.plot(estimates_dates, estimates_values, marker='o')
-    figure.savefig(f"{project_name.replace(' ', '_')}.png", dpi=300)
+    figure.savefig(f"graph_{project_name.replace(' ', '_')}.png", dpi=300)
 
 
 def plot_real_progress_and_estimates(project):

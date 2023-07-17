@@ -1,8 +1,7 @@
-import matplotlib.figure
-import matplotlib.pyplot as plt
 from collections import Counter
 from datetime import datetime
 
+import matplotlib.figure
 from dateutil.relativedelta import relativedelta
 
 from tawos import Tawos
@@ -105,7 +104,6 @@ def show_graph(project_name: str, real_progress, estimates):
 
 
 def plot_real_progress_and_estimates(project):
-    print(f"Analysing project {project}")
     issues = project.get_issues()
     resolutions_dates = [i.resolution_date for i in issues]
     progress = IssuesGroupedByDay(resolutions_dates)
@@ -114,7 +112,11 @@ def plot_real_progress_and_estimates(project):
 
 
 def main():
-    for project in Tawos().get_projects():
+    projects = Tawos().get_projects()
+    plot_real_progress_and_estimates(projects[1])
+    return
+    for project in projects:
+        print(f"Analysing project {project.name}")
         try:
             plot_real_progress_and_estimates(project)
         except:

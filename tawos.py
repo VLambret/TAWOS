@@ -1,3 +1,5 @@
+from collections import Counter
+
 import mysql.connector
 
 
@@ -23,8 +25,20 @@ db = DB()
 class Issue:
     def __init__(self, issue_data):
         self.status = issue_data['Status']
-        self.resolution= issue_data['Resolution']
-        self.resolution_date = issue_data['Resolution_Date']
+        self.resolution = issue_data['Resolution']
+        self.data = issue_data
+
+        self.is_done: bool = self.get_done_status(issue_data['Status'])
+        self.resolution_date = self.get_resolution_date(issue_data)
+
+    def get_resolution_date(self, issue_data):
+        if issue_data['Resolution_Date']:
+            return issue_data['Resolution_Date']
+        else:
+            return issue_data['Last_Updated']
+
+    def get_done_status(self, status):
+        return status in ["Done", "Closed", "Resolved", "Accepted"]
 
 
 class Project:
@@ -32,14 +46,21 @@ class Project:
         self.id = data["ID"]
         self.name = data["Name"]
 
-    def get_issues(self) -> list[Issue]:
         query = f"""
             SELECT *
             FROM Issue
-            WHERE Issue.Project_ID = {self.id} AND Issue.Status = "Done" and Issue.Resolution = "Complete";
+            WHERE Issue.Project_ID = {self.id};
         """
+        self.issues = [Issue(i) for i in (db.query(query))]
+        self.print_stats()
 
-        return [Issue(i) for i in (db.query(query))]
+    def get_issues(self) -> list[Issue]:
+        return [issue for issue in self.issues if issue.is_done]
+
+    def print_stats(self):
+        print(f"Issues stats:")
+        status_stat = dict(Counter([i.status for i in self.issues]))
+        print(status_stat)
 
 
 class Tawos:

@@ -5,4 +5,4 @@
 # GRANT ALL PRIVILEGES ON tawos.* TO 'tawos'@'localhost';
 # FLUSH PRIVILEGES;
 
-mysql -u tawos -p tawos < TAWOS.sql
+mysql -u tawos -p tawospass < TAWOS.sql

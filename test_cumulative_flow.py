@@ -43,7 +43,7 @@ class TestCumulativeFlow:
         CumulativeFlow(task_end_dates).get_total_closed_task_on_day(1)
         CumulativeFlow(task_end_dates).get_total_closed_task_on_day(3)
 
-        with pytest.raises(IndexError) as e:
+        with pytest.raises(IndexError):
             CumulativeFlow(task_end_dates).get_total_closed_task_on_day(0)
-        with pytest.raises(IndexError) as e:
+        with pytest.raises(IndexError):
             CumulativeFlow(task_end_dates).get_total_closed_task_on_day(4)

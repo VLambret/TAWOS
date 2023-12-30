@@ -1,17 +1,17 @@
 from collections import Counter
-from datetime import date
+from datetime import date, timedelta
 
 from pandas import date_range
 
 
 class CumulativeFlow:
     def __init__(self, dates: list[date]):
-        first_completed_task = min(dates)
-        last_completed_task = max(dates)
+        self.first_day: date = min(dates)
+        self.last_day: date = max(dates)
 
         closed_tasks_per_day = dict(Counter(dates))
 
-        project_range = [d.date() for d in date_range(first_completed_task, last_completed_task)]
+        project_range = [d.date() for d in date_range(self.first_day, self.last_day)]
 
         result: dict[date: int] = {d: 0 for d in project_range}
 
@@ -21,3 +21,7 @@ class CumulativeFlow:
             result[d] = total_completed_task
 
         self.total_closed_task_per_day: dict[date, int] = result
+
+    def get_total_closed_task_on_day(self, day_number: int) -> int:
+        date_from_day_number = self.first_day + timedelta(days=day_number - 1)
+        return self.total_closed_task_per_day[date_from_day_number]

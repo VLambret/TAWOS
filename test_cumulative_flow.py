@@ -23,6 +23,16 @@ class TestCumulativeFlow:
 
         assert expected == flow
 
+    def test_total_task_can_also_be_obtained_with_a_day_number(self):
+        task_end_dates = [
+            date(2023, 1, 2),
+            date(2023, 1, 2),
+            date(2023, 1, 3),
+            date(2023, 1, 1),
+        ]
+        assert 3 == CumulativeFlow(task_end_dates).get_total_closed_task_on_day(2)
+
+
 
 
 

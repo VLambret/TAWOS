@@ -4,9 +4,11 @@ from cumulative_flow import CumulativeFlow
 
 
 class TestCumulativeFlow:
-    def test_cumulative_flow(self):
+    def test_cumulative_flow_compute_total_closed_task_on_a_day_from_task_end_dates(self):
         task_end_dates = [
             date(2023, 1, 3),
+            date(2023, 1, 3),
+            date(2023, 1, 5),
             date(2023, 1, 1),
         ]
         flow = CumulativeFlow(task_end_dates).total_closed_task_per_day
@@ -14,7 +16,9 @@ class TestCumulativeFlow:
         expected: dict[date: int] = {
             date(2023, 1, 1): 1,
             date(2023, 1, 2): 1,
-            date(2023, 1, 3): 2,
+            date(2023, 1, 3): 3,
+            date(2023, 1, 4): 3,
+            date(2023, 1, 5): 4,
         }
 
         assert expected == flow

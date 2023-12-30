@@ -25,7 +25,17 @@ class CumulativeFlow:
     def get_total_closed_task_on_day(self, day_number: int) -> int:
         date_from_day_number = self.first_day + timedelta(days=day_number - 1)
 
+        if date_from_day_number < self.first_day:
+            return 0
+
+        if date_from_day_number > self.last_day:
+            return self.total_closed_task_per_day[self.last_day]
+
         if date_from_day_number not in self.total_closed_task_per_day:
             raise IndexError("date number outside of project")
 
         return self.total_closed_task_per_day[date_from_day_number]
+
+    def get_closed_tasks_in(self, start, end) -> int:
+        return self.get_total_closed_task_on_day(end) - self.get_total_closed_task_on_day(start)
+

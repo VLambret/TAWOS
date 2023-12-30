@@ -1,7 +1,5 @@
 from datetime import date
 
-from sympy.testing import pytest
-
 from cumulative_flow import CumulativeFlow
 
 
@@ -23,7 +21,7 @@ class TestCumulativeFlow:
             date(2023, 1, 5): 4,
         }
 
-        assert expected == flow
+        assert flow == expected
 
     def test_total_task_can_also_be_obtained_with_a_day_number(self):
         task_end_dates = [
@@ -32,9 +30,9 @@ class TestCumulativeFlow:
             date(2023, 1, 3),
             date(2023, 1, 1),
         ]
-        assert 3 == CumulativeFlow(task_end_dates).get_total_closed_task_on_day(2)
+        assert CumulativeFlow(task_end_dates).get_total_closed_task_on_day(2) == 3
 
-    def test_total_task_raises_errors_when_day_number_is_out_of_range(self):
+    def test_can_give_total_tasks_outside_of_project_interval(self):
         task_end_dates = [
             date(2023, 1, 10),
             date(2023, 1, 11),
@@ -43,7 +41,5 @@ class TestCumulativeFlow:
         CumulativeFlow(task_end_dates).get_total_closed_task_on_day(1)
         CumulativeFlow(task_end_dates).get_total_closed_task_on_day(3)
 
-        with pytest.raises(IndexError):
-            CumulativeFlow(task_end_dates).get_total_closed_task_on_day(0)
-        with pytest.raises(IndexError):
-            CumulativeFlow(task_end_dates).get_total_closed_task_on_day(4)
+        assert CumulativeFlow(task_end_dates).get_total_closed_task_on_day(0) == 0
+        assert CumulativeFlow(task_end_dates).get_total_closed_task_on_day(4) == 3

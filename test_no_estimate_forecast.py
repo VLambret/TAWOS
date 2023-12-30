@@ -16,7 +16,7 @@ def project_closing_one_task_each_day():
 
 
 class TestNoEstimateForecast:
-    def test_future_can_be_projected_from_the_past(self):
+    def test_future_can_be_forecasted_from_the_past(self):
         project = project_closing_one_task_each_day()
         forecaster = NoEstimateForecast(project)
 
@@ -25,3 +25,13 @@ class TestNoEstimateForecast:
                              .on_next_days(1))
 
         assert 11 == five_day_forecast
+
+    def test_future_can_be_projected_from_the_past_other_case(self):
+        project = project_closing_one_task_each_day()
+        forecaster = NoEstimateForecast(project)
+
+        five_day_forecast = (forecaster.forecast_on_day(10)
+                             .using_last_days(5)
+                             .on_next_days(10))
+
+        assert 20 == five_day_forecast

@@ -68,7 +68,7 @@ class Project:
 
     def save_dates_on_disk(self):
         completion_dates = [issue.resolution_date.strftime("%Y-%m-%d") for issue in self.issues if issue.is_done]
-        with open(self.get_project_folder() / "input.csv", 'w') as f:
+        with open(self.get_project_folder() / f"{self.sanitized_name}.csv", 'w') as f:
             for d in completion_dates:
                 f.write(f"{d}\n")
 

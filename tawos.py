@@ -1,4 +1,6 @@
 from collections import Counter
+from datetime import datetime
+from pathlib import Path
 
 import mysql.connector
 
@@ -29,7 +31,7 @@ class Issue:
         self.data = issue_data
 
         self.is_done: bool = self.get_done_status(issue_data['Status'])
-        self.resolution_date = self.get_resolution_date(issue_data)
+        self.resolution_date: datetime = self.get_resolution_date(issue_data)
 
     def get_resolution_date(self, issue_data):
         if issue_data['Resolution_Date']:
@@ -46,17 +48,29 @@ class Project:
     def __init__(self, data):
         self.id = data["ID"]
         self.name = data["Name"]
+        self.sanitized_name = self.name.replace(' ', '_')
 
         query = f"""
             SELECT *
             FROM Issue
             WHERE Issue.Project_ID = {self.id};
         """
-        self.issues = [Issue(i) for i in (db.query(query))]
+        self.issues: list[Issue] = [Issue(i) for i in (db.query(query))]
         self.print_stats()
 
     def get_issues(self) -> list[Issue]:
         return [issue for issue in self.issues if issue.is_done]
+
+    def get_project_folder(self) -> Path:
+        p = Path(f"projects/{self.sanitized_name}")
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+
+    def save_dates_on_disk(self):
+        completion_dates = [issue.resolution_date.strftime("%Y-%m-%d") for issue in self.issues if issue.is_done]
+        with open(self.get_project_folder() / "input.csv", 'w') as f:
+            for d in completion_dates:
+                f.write(f"{d}\n")
 
     def print_stats(self):
         print(f"Issues stats:")

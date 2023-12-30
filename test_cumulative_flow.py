@@ -1,6 +1,6 @@
 from datetime import date
 
-from cumulative_flow import get_cumulative_flow
+from cumulative_flow import CumulativeFlow
 
 
 class TestCumulativeFlow:
@@ -9,7 +9,7 @@ class TestCumulativeFlow:
             date(2023, 1, 3),
             date(2023, 1, 1),
         ]
-        flow = get_cumulative_flow(task_end_dates)
+        flow = CumulativeFlow(task_end_dates).total_closed_task_per_day
 
         expected: dict[date: int] = {
             date(2023, 1, 1): 1,

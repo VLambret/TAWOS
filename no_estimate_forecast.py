@@ -27,8 +27,10 @@ class ForecastOnDay:
 
 
 class NoEstimateForecast:
-    def __init__(self, cumulative_flow: CumulativeFlow):
+    def __init__(self, cumulative_flow: CumulativeFlow, using_last_days: int, on_the_next_days: int):
         self.cumulative_flow = cumulative_flow
+        self.using_last_days = using_last_days
+        self.on_the_next_days = on_the_next_days
 
-    def forecast_on_day(self, forecast_day) -> ForecastOnDay:
-        return ForecastOnDay(self.cumulative_flow, forecast_day)
+    def forecast_on_day(self, forecast_day) -> float:
+        return ForecastOnDay(self.cumulative_flow, forecast_day).using_last_days(self.using_last_days).on_next_days(self.on_the_next_days)

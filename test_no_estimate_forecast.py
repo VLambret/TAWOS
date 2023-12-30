@@ -18,20 +18,12 @@ def project_closing_one_task_each_day():
 class TestNoEstimateForecast:
     def test_future_can_be_forecasted_from_the_past(self):
         project = project_closing_one_task_each_day()
-        forecaster = NoEstimateForecast(project)
+        forecaster = NoEstimateForecast(project, 1, 1)
 
-        five_day_forecast = (forecaster.forecast_on_day(10)
-                             .using_last_days(1)
-                             .on_next_days(1))
-
-        assert 11 == five_day_forecast
+        assert 11 == forecaster.forecast_on_day(10)
 
     def test_future_can_be_projected_from_the_past_other_case(self):
         project = project_closing_one_task_each_day()
-        forecaster = NoEstimateForecast(project)
+        forecaster = NoEstimateForecast(project, 5, 10)
 
-        five_day_forecast = (forecaster.forecast_on_day(10)
-                             .using_last_days(5)
-                             .on_next_days(10))
-
-        assert 20 == five_day_forecast
+        assert 20 == forecaster.forecast_on_day(10)

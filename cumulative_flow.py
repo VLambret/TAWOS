@@ -14,7 +14,9 @@ def get_cumulative_flow(dates: list[date]) -> dict[date, int]:
 
     result: dict[date: int] = {d: 0 for d in project_range}
 
+    total_completed_task: int = 0
     for d in project_range:
-        result[d] = 0
+        total_completed_task += closed_tasks_per_day.get(d, 0)
+        result[d] = total_completed_task
 
     return result

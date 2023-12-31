@@ -12,12 +12,15 @@ from mmre import compute_all_signed_mmre
 from no_estimate_forecast import NoEstimateForecast
 
 
-def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValuesType]):
+def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, IndexedDatedValues]:
     all_data_to_plot = {
         k: IndexedDatedValues(v)
         for k, v in all_data_to_plot.items()
     }
+    return all_data_to_plot
 
+
+def show_graph(filename: Path, all_data_to_plot: dict[str, IndexedDatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()
@@ -71,10 +74,10 @@ def main():
         mmre_to_plot[f'{n} days forecast'] = mmre_with_dates
 
     project_graph_file = Path(sys.argv[1]).parent / "graph_actual_work_and_estimates"
-    show_graph(project_graph_file, all_sets_to_plot)
+    show_graph(project_graph_file, old_to_new(all_sets_to_plot))
 
     mmre_graph_file = Path(sys.argv[1]).parent / "graph_mmre"
-    show_graph(mmre_graph_file, mmre_to_plot)
+    show_graph(mmre_graph_file, old_to_new(mmre_to_plot))
 
 
 main()

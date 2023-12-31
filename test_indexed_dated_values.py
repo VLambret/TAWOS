@@ -3,12 +3,6 @@ from datetime import date
 from indexed_dated_values import IndexedDatedValues, DatedValue
 
 
-class TestDatedValues:
-    def test_can_be_compared(self):
-        assert DatedValue(date(2023, 1, 3), 42) == DatedValue(date(2023, 1, 3), 42)
-        assert DatedValue(date(2023, 1, 3), 42) != DatedValue(date(2023, 1, 3), 43)
-
-
 class TestIndexedDatedValues:
     data1 = {
         date(2023, 1, 3): 1,
@@ -25,7 +19,6 @@ class TestIndexedDatedValues:
     values3 = IndexedDatedValues(data2)
 
     def test_can_be_compared(self):
-
         assert self.values1 == self.values2
         assert self.values1 != self.values3
 

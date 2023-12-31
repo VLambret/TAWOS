@@ -20,9 +20,6 @@ class NoEstimateForecast:
         velocity = self._get_velocity_on_day(forecast_day)
         return total_closed_tasks_that_day + velocity * number_of_days_in_the_future
 
-    def forecast_on_day(self, forecast_day) -> float:
-        return self._forecast_on_day(forecast_day, self.number_of_days_in_the_future)
-
     def forecast_for_day(self, day_to_forecast_for) -> float:
         day_to_forecast_on = day_to_forecast_for - self.number_of_days_in_the_future
         number_of_days_in_the_future = self.number_of_days_in_the_future

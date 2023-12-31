@@ -32,16 +32,6 @@ class TestWithInitialWorkaround:
         assert self.perfect_project_forecaster._forecast_on_day(on_day, days_in_the_future) == expected
 
     @pytest.mark.parametrize("day, expected", [
-        (1, 4.0),
-        (2, 5.0),
-        (3, 6.0),
-        (4, 7.0),
-        (5, 8.0),
-    ])
-    def test_forecast_on_day(self, day, expected):
-        assert self.perfect_project_forecaster.forecast_on_day(day) == expected
-
-    @pytest.mark.parametrize("day, expected", [
         (1, 1.0),
         (2, 2.0),
         (3, 3.0),
@@ -71,16 +61,6 @@ class TestWithNoInitialWorkaround:
         assert self.perfect_project_forecaster._forecast_on_day(on_day, days_in_the_future) == expected
 
     @pytest.mark.parametrize("day, expected", [
-        (1, 4.0),
-        (2, 5.0),
-        (3, 6.0),
-        (4, 7.0),
-        (5, 8.0),
-    ])
-    def test_forecast_on_day(self, day, expected):
-        assert self.perfect_project_forecaster.forecast_on_day(day) == expected
-
-    @pytest.mark.parametrize("day, expected", [
         (1, 0.0),
         (2, 0.0),
         (3, 0.0),
@@ -93,36 +73,3 @@ class TestWithNoInitialWorkaround:
     def test_forecast_for_all_days(self):
         expected = [0.0, 0.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
         assert self.perfect_project_forecaster.forecast_for_all_days() == expected
-
-
-class TestNoEstimateForecastSingleDay:
-    def test_future_can_be_forecasted_from_the_past(self):
-        project = project_closing_one_task_each_day(5)
-        forecaster = NoEstimateForecast(project, 1, 1)
-
-        assert forecaster.forecast_on_day(1) == 2.0
-        assert forecaster.forecast_on_day(2) == 3.0
-        assert forecaster.forecast_on_day(3) == 4.0
-        assert forecaster.forecast_on_day(4) == 5.0
-        assert forecaster.forecast_on_day(5) == 6.0
-
-    def test_future_can_be_projected_from_the_past_other_case(self):
-        project = project_closing_one_task_each_day(31)
-        forecaster = NoEstimateForecast(project, 5, 10)
-
-        assert forecaster.forecast_on_day(10) == 20.0
-
-    def test_only_pasts_days_inside_project_are_used_for_velocity(self):
-        project = project_closing_one_task_each_day(31)
-        forecaster = NoEstimateForecast(project, 10, 10)
-
-        assert forecaster.forecast_on_day(0) == 0.0
-        assert forecaster.forecast_on_day(1) == 11.0
-        assert forecaster.forecast_on_day(5) == 15.0
-
-    def test_it_s_possible_to_forecast_after_the_project_end(self):
-        project = project_closing_one_task_each_day(31)
-        forecaster = NoEstimateForecast(project, 10, 10)
-
-        assert forecaster.forecast_on_day(40) == 32.0
-        assert forecaster.forecast_on_day(50) == 31.0

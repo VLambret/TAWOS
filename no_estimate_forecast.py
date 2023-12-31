@@ -1,3 +1,5 @@
+import math
+
 from cumulative_flow import CumulativeFlow
 
 
@@ -11,6 +13,7 @@ class NoEstimateForecast:
         self.number_of_day_used_for_velocity = using_last_days
         self.number_of_days_in_the_future = on_the_next_days
         self.use_blind_spot_workaround = use_blind_spot_workaround
+        self.blind_spot_percent_to_use = 0.20
 
     def _forecast_on_day(self, forecast_day: int, number_of_days_in_the_future) -> float:
         if forecast_day <= 0:
@@ -25,10 +28,11 @@ class NoEstimateForecast:
         number_of_days_in_the_future = self.number_of_days_in_the_future
 
         if self.use_blind_spot_workaround:
-            day_to_forecast_on = max(day_to_forecast_on, 1)
+            if day_to_forecast_on <= self.number_of_days_in_the_future * self.blind_spot_percent_to_use:
+                day_to_forecast_on = max(day_to_forecast_on, math.ceil(day_to_forecast_for * self.blind_spot_percent_to_use))
 
             overflow = day_to_forecast_on + self.number_of_days_in_the_future - day_to_forecast_for
-            if overflow > 0:
+            if overflow >= 0:
                 number_of_days_in_the_future = self.number_of_days_in_the_future - overflow
 
         return self._forecast_on_day(day_to_forecast_on, number_of_days_in_the_future)

@@ -8,7 +8,6 @@ import matplotlib.figure
 
 from cumulative_flow import CumulativeFlow
 from indexed_dated_values import DatedValuesType, IndexedDatedValues
-from mmre import compute_all_signed_mmre_legacy
 from no_estimate_forecast import NoEstimateForecast
 
 

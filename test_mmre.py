@@ -1,5 +1,5 @@
 import pytest
-from mmre import compute_all_mmre, compute_mmre, compute_signed_mmre
+from mmre import compute_mmre, compute_signed_mmre
 
 
 class TestMRE:
@@ -22,10 +22,3 @@ class TestMRE:
     ])
     def test_signed_mmre_formula(self, actual, estimated, expected_result):
         assert compute_signed_mmre(actual, estimated) == expected_result
-
-    def test_perfect_forecast(self):
-        actual_project_cumulative_flow = [1, 2, 2, 4, 5]
-        forecast_project_cumulative_flow = [1, 2, 2, 2, 10]
-
-        actual_all_mmre = compute_all_mmre(actual_project_cumulative_flow, forecast_project_cumulative_flow)
-        assert actual_all_mmre == [0.0, 0.0, 0.0, 0.5, 1.0]

@@ -17,7 +17,7 @@ def project_closing_one_task_each_day(project_duration):
     return CumulativeFlow(each_date_once_in_interval)
 
 
-class TestNoEstimateForecastWithInternalBlindSpotWorkaround:
+class TestWithInitialWorkaround:
     project = project_closing_one_task_each_day(10)
     perfect_project_forecaster = NoEstimateForecast(project, 3, 3, use_blind_spot_workaround=True)
 
@@ -51,8 +51,12 @@ class TestNoEstimateForecastWithInternalBlindSpotWorkaround:
     def test_forecast_for_day(self, day, expected):
         assert self.perfect_project_forecaster.forecast_for_day(day) == expected
 
+    def test_forecast_for_all_days(self):
+        expected = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+        assert self.perfect_project_forecaster.forecast_for_all_days() == expected
 
-class TestNoEstimateForecastWithoutInternalBlindSpotWorkaround:
+
+class TestWithNoInitialWorkaround:
     project = project_closing_one_task_each_day(10)
     perfect_project_forecaster = NoEstimateForecast(project, 3, 3, use_blind_spot_workaround=False)
 
@@ -86,32 +90,9 @@ class TestNoEstimateForecastWithoutInternalBlindSpotWorkaround:
     def test_forecast_for_day(self, day, expected):
         assert self.perfect_project_forecaster.forecast_for_day(day) == expected
 
-
-class TestNoEstimateForecastAllDays:
-    def test_future_can_be_forecasted_from_the_past(self):
-        project = project_closing_one_task_each_day(5)
-        forecaster = NoEstimateForecast(project, 1, 1)
-
-        assert forecaster.forecast_for_day(1) == 0.0
-        assert forecaster.forecast_for_day(2) == 2.0
-        assert forecaster.forecast_for_day(3) == 3.0
-        assert forecaster.forecast_for_day(4) == 4.0
-        assert forecaster.forecast_for_day(5) == 5.0
-
-        expected_forecast = [0.0, 2.0, 3.0, 4.0, 5.0]
-        actual_forecast = forecaster.forecast_for_all_days()
-        assert actual_forecast == expected_forecast
-
-    def test_get_all_days_to_forecast_on_without_initial_hack(self):
-        project = project_closing_one_task_each_day(10)
-        forecaster = NoEstimateForecast(project, 3, 3)
-
-        assert forecaster.forecast_for_all_days() == [0.0, 0.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-
-    def test_get_all_days_to_forecast_on_with_initial_blind_spot_workaround(self):
-        project = project_closing_one_task_each_day(10)
-        forecaster = NoEstimateForecast(project, 3, 3, use_blind_spot_workaround=True)
-        assert forecaster.forecast_for_all_days() == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+    def test_forecast_for_all_days(self):
+        expected = [0.0, 0.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+        assert self.perfect_project_forecaster.forecast_for_all_days() == expected
 
 
 class TestNoEstimateForecastSingleDay:

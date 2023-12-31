@@ -6,7 +6,7 @@ class NoEstimateForecast:
                  cumulative_flow: CumulativeFlow,
                  using_last_days: int,
                  on_the_next_days: int,
-                 use_blind_spot_workaround=False):
+                 use_blind_spot_workaround=True):
         self.cumulative_flow = cumulative_flow
         self.number_of_day_used_for_velocity = using_last_days
         self.number_of_days_in_the_future = on_the_next_days

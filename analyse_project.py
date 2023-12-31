@@ -62,6 +62,13 @@ def main():
     ###################
 
     actual = project_activity.cumulated_completed_tasks
+
+    estimate_periods = [1, 5, 10, 20, 30, 60, 90, 180, 240, 360]
+    all_estimates = {
+        period: NoEstimateForecast(project_activity, period, period).forecast_for_all_days()
+        for period in estimate_periods
+    }
+
     all_estimates_to_plot: dict[str, IndexedDatedValues] = {"Actual": actual}
 
     for n in [30, 180, 360]:
@@ -75,11 +82,24 @@ def main():
     show_graph(labels, project_graph_file, all_estimates_to_plot)
 
     ###################
-    # MRE part
+    # Signed MMRE part
     ###################
 
     mmre_to_plot: dict[str, IndexedDatedValues] = {
         tag: estimate.compute_signed_mmre_compared_to_reference(actual) for tag, estimate in
+        all_estimates_to_plot.items()
+    }
+
+    mmre_graph_file = project_folder / "graph_signed_mmre"
+    labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts signed MMRE")
+    show_graph(labels, mmre_graph_file, mmre_to_plot)
+
+    ###################
+    # MMRE part
+    ###################
+
+    mmre_to_plot: dict[str, IndexedDatedValues] = {
+        tag: estimate.compute_mmre_compared_to_reference(actual) for tag, estimate in
         all_estimates_to_plot.items()
     }
 

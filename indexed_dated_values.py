@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 
-from mmre import compute_signed_mmre
+from mmre import compute_signed_mmre, compute_mmre
 
 DatedValuesType = dict[date, [float | int]]
 
@@ -31,6 +31,14 @@ class IndexedDatedValues:
 
     def get_values(self) -> list[int | float]:
         return [v.value for v in self.values]
+
+    def compute_mmre_compared_to_reference(self, reference: "IndexedDatedValues") -> "IndexedDatedValues":
+        r = {}
+        for index, v in enumerate(self.values):
+            actual = reference.values[index].value
+            compared = v.value
+            r[v.date] = compute_mmre(actual, compared)
+        return IndexedDatedValues(r)
 
     def compute_signed_mmre_compared_to_reference(self, reference: "IndexedDatedValues") -> "IndexedDatedValues":
         r = {}

@@ -19,7 +19,7 @@ class NoEstimateForecast:
         if forecast_day <= 0:
             return 0.0
 
-        total_closed_tasks_that_day = self.cumulative_flow.get_total_closed_task_on_day(forecast_day)
+        total_closed_tasks_that_day = self.cumulative_flow.get_total_completed_task_on_day(forecast_day)
         velocity = self._get_velocity_on_day(forecast_day)
         return total_closed_tasks_that_day + velocity * number_of_days_in_the_future
 

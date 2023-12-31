@@ -1,16 +1,17 @@
 #! /usr/bin/python3
 import sys
-import matplotlib
-import matplotlib.figure
 from datetime import date, datetime
 from pathlib import Path
 
-from cumulative_flow import CumulativeFlow
-from mmre import compute_all_mmre, compute_all_signed_mmre
+import matplotlib
+import matplotlib.figure
+
+from cumulative_flow import CumulativeFlow, DatedValues
+from mmre import compute_all_signed_mmre
 from no_estimate_forecast import NoEstimateForecast
 
 
-def show_graph(filename: Path, all_data_to_plot: dict[str, dict[date, float]]):
+def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()

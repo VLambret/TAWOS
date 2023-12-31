@@ -29,3 +29,9 @@ class IndexedDatedValues:
 
     def get_values(self) -> list[int | float]:
         return [v.value for v in self.values]
+
+    def compute_signed_mmre_compared_to(self, actual: "IndexedDatedValues") -> "IndexedDatedValues":
+        r = {}
+        for index, v in enumerate(self.values):
+            r[v.date] = 0.0
+        return IndexedDatedValues(r)

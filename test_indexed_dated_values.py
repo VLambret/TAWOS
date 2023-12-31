@@ -25,3 +25,9 @@ class TestIndexedDatedValues:
     def test_can_access_element_from_index(self):
         assert self.values1[1] == DatedValue(date(2023, 1, 3), 1)
 
+    def test_compute_signed_mmre(self):
+        mmre = self.values1.compute_signed_mmre_compared_to(self.values2)
+        expected = IndexedDatedValues({date(2023, 1, 3): 0.0,
+                                       date(2023, 1, 4): 0.0
+                                       })
+        assert mmre.values == expected.values

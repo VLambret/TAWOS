@@ -55,7 +55,8 @@ def main():
     # Estimates part
     ###################
 
-    all_estimates_to_plot: dict[str, IndexedDatedValues] = {"Actual": project_activity.cumulated_completed_tasks}
+    actual = project_activity.cumulated_completed_tasks
+    all_estimates_to_plot: dict[str, IndexedDatedValues] = {"Actual": actual}
 
     for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
@@ -70,8 +71,9 @@ def main():
     # MRE part
     ###################
 
-    ideal_mmre = IndexedDatedValues({d: 0.0 for d in project_activity.cumulated_completed_tasks.get_dates()})
-    mmre_to_plot: dict[str, IndexedDatedValues] = {"Actual": ideal_mmre}
+    mmre_to_plot: dict[str, IndexedDatedValues] = {
+        tag: estimate.compute_signed_mmre_compared_to(actual) for tag, estimate in all_estimates_to_plot.items()
+    }
 
     ideal_mmre_legacy = {k: 0.0 for k, v in cumulated_completed_task_per_day.items()}
     mmre_to_plot_legacy = {"Actual": ideal_mmre_legacy}

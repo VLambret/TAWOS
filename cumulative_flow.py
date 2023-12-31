@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from pandas import date_range
 
-DatedValues = dict[date, [float | int]]
+from dated_values import DatedValuesType
 
 
 class CumulativeFlow:
@@ -15,14 +15,14 @@ class CumulativeFlow:
 
         project_range = [d.date() for d in date_range(self.first_day, self.last_day)]
 
-        result: DatedValues = {d: 0 for d in project_range}
+        result: DatedValuesType = {d: 0 for d in project_range}
 
         total_completed_task: int = 0
         for d in project_range:
             total_completed_task += closed_tasks_per_day.get(d, 0)
             result[d] = total_completed_task
 
-        self.total_closed_task_per_day: DatedValues = result
+        self.total_closed_task_per_day: DatedValuesType = result
 
     def get_total_completed_task_on_day(self, day_number: int) -> int:
         date_from_day_number = self.first_day + timedelta(days=day_number - 1)

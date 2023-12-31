@@ -6,12 +6,13 @@ from pathlib import Path
 import matplotlib
 import matplotlib.figure
 
-from cumulative_flow import CumulativeFlow, DatedValues
+from cumulative_flow import CumulativeFlow
+from dated_values import DatedValuesType
 from mmre import compute_all_signed_mmre
 from no_estimate_forecast import NoEstimateForecast
 
 
-def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValues]):
+def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValuesType]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()

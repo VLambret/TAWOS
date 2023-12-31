@@ -6,10 +6,11 @@ from datetime import date, datetime
 from pathlib import Path
 
 from cumulative_flow import CumulativeFlow
+from mmre import compute_all_mmre, compute_all_signed_mmre
 from no_estimate_forecast import NoEstimateForecast
 
 
-def show_graph(filename: Path, real_progress: dict[date, float], all_estimates: dict[str, dict[date, float]]):
+def show_graph(filename: Path, all_data_to_plot: dict[str, dict[date, float]]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()
@@ -17,13 +18,9 @@ def show_graph(filename: Path, real_progress: dict[date, float], all_estimates: 
     figure_axis.set_xlabel('Date')
     figure_axis.set_ylabel('# of Completed issues')
 
-    progress_dates = list(real_progress.keys())
-    progress_values = list(real_progress.values())
-    figure_axis.plot(progress_dates, progress_values, label='Actual')
-
-    for label, estimates in all_estimates.items():
-        estimates_dates = list(estimates.keys())
-        estimates_values = list(estimates.values())
+    for label, data in all_data_to_plot.items():
+        estimates_dates = list(data.keys())
+        estimates_values = list(data.values())
         figure_axis.plot(estimates_dates, estimates_values, label=label)
 
     figure_axis.legend()
@@ -44,20 +41,32 @@ def main():
 
     cumulated_completed_task_per_day = project_activity.total_closed_task_per_day
 
-    all_estimates = {}
+    all_sets_to_plot = {"Actual": cumulated_completed_task_per_day}
+    ideal_mmre = {k: 0.0 for k, v in cumulated_completed_task_per_day.items()}
+    mmre_to_plot = {"Actual": ideal_mmre}
 
     for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
         estimates = forecaster.forecast_all_days()
+
         estimates_with_dates = {}
         for index, day in enumerate(cumulated_completed_task_per_day.keys()):
             estimates_with_dates[day] = estimates[index]
 
-        all_estimates[f'{n} days forecast'] = estimates_with_dates
+        mmre = compute_all_signed_mmre(list(cumulated_completed_task_per_day.values()), estimates)
 
+        mmre_with_dates = {}
+        for index, day in enumerate(cumulated_completed_task_per_day.keys()):
+            mmre_with_dates[day] = mmre[index]
+
+        all_sets_to_plot[f'{n} days forecast'] = estimates_with_dates
+        mmre_to_plot[f'{n} days forecast'] = mmre_with_dates
 
     project_graph_file = Path(sys.argv[1]).parent / "graph_actual_work_and_estimates"
-    show_graph(project_graph_file, cumulated_completed_task_per_day, all_estimates)
+    show_graph(project_graph_file, all_sets_to_plot)
+
+    mmre_graph_file = Path(sys.argv[1]).parent / "graph_mmre"
+    show_graph(mmre_graph_file, mmre_to_plot)
 
 
 main()

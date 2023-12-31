@@ -1,6 +1,7 @@
 import math
 
 from cumulative_flow import CumulativeFlow
+from indexed_dated_values import IndexedDatedValues
 
 
 class NoEstimateForecast:
@@ -37,9 +38,13 @@ class NoEstimateForecast:
 
         return self._forecast_on_day(day_to_forecast_on, number_of_days_in_the_future)
 
-    def forecast_for_all_days(self) -> list[float]:
+    def forecast_for_all_days_legacy(self) -> list[float]:
         all_days_to_forecast_to = range(1, len(self.cumulative_flow.total_closed_task_per_day) + 1)
         return [self.forecast_for_day(d) for d in all_days_to_forecast_to]
+
+    def forecast_for_all_days(self) -> IndexedDatedValues:
+        result = {v.date: v.value for v in self.cumulative_flow.cumulated_completed_tasks.values}
+        return IndexedDatedValues(result)
 
     def _get_velocity_on_day(self, forecast_day) -> float:
         first_day_of_velocity_interval = max(0, forecast_day - self.number_of_day_used_for_velocity)

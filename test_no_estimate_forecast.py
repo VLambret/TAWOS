@@ -53,7 +53,7 @@ class TestPerfectProject_WithInitialWorkaround:
 
     def test_forecast_for_all_days(self):
         expected = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-        assert self.perfect_project_forecaster.forecast_for_all_days() == expected
+        assert self.perfect_project_forecaster.forecast_for_all_days_legacy() == expected
 
 
 class TestPerfectProject_NoInitialWorkaround:
@@ -82,7 +82,7 @@ class TestPerfectProject_NoInitialWorkaround:
 
     def test_forecast_for_all_days(self):
         expected = [0.0, 0.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-        assert self.perfect_project_forecaster.forecast_for_all_days() == expected
+        assert self.perfect_project_forecaster.forecast_for_all_days_legacy() == expected
 
 
 class TestSpeedingUpProject_WithInitialWorkaround:
@@ -130,4 +130,4 @@ class TestSpeedingUpProject_WithInitialWorkaround:
                     153.0,
                     176.0,
                     200.0]
-        assert self.project_speeding_up.forecast_for_all_days() == expected
+        assert self.project_speeding_up.forecast_for_all_days_legacy() == expected

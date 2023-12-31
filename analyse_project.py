@@ -13,7 +13,6 @@ from no_estimate_forecast import NoEstimateForecast
 
 
 def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValuesType]):
-
     all_data_to_plot = {
         k: IndexedDatedValues(v)
         for k, v in all_data_to_plot.items()
@@ -47,7 +46,7 @@ def main():
     dates = load_dates_from(project_csv)
     project_activity = CumulativeFlow(dates)
 
-    cumulated_completed_task_per_day = project_activity.total_closed_task_per_day
+    cumulated_completed_task_per_day: DatedValuesType = project_activity.total_closed_task_per_day
 
     all_sets_to_plot = {"Actual": cumulated_completed_task_per_day}
     ideal_mmre = {k: 0.0 for k, v in cumulated_completed_task_per_day.items()}
@@ -55,13 +54,14 @@ def main():
 
     for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
+        estimates_legacy = forecaster.forecast_for_all_days_legacy()
         estimates = forecaster.forecast_for_all_days()
 
         estimates_with_dates = {}
         for index, day in enumerate(cumulated_completed_task_per_day.keys()):
-            estimates_with_dates[day] = estimates[index]
+            estimates_with_dates[day] = estimates_legacy[index]
 
-        mmre = compute_all_signed_mmre(list(cumulated_completed_task_per_day.values()), estimates)
+        mmre = compute_all_signed_mmre(list(cumulated_completed_task_per_day.values()), estimates_legacy)
 
         mmre_with_dates = {}
         for index, day in enumerate(cumulated_completed_task_per_day.keys()):

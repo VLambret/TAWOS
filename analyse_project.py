@@ -47,7 +47,7 @@ def main():
 
     for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
-        estimates = forecaster.forecast_all_days()
+        estimates = forecaster.forecast_for_all_days()
 
         estimates_with_dates = {}
         for index, day in enumerate(cumulated_completed_task_per_day.keys()):

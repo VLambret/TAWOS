@@ -20,9 +20,13 @@ class NoEstimateForecast:
     def forecast_for_day(self, day_to_forecast_for) -> float:
         return self.forecast_on_day(day_to_forecast_for - self.number_of_days_in_the_future)
 
-    def forecast_all_days(self) -> list[float]:
-        days_as_number = range(1, len(self.cumulative_flow.total_closed_task_per_day) + 1)
-        return [self.forecast_for_day(d) for d in days_as_number]
+    def forecast_for_all_days(self) -> list[float]:
+        return [self.forecast_on_day(d) for d in (self._get_all_days_to_forecast_on())]
+
+    def _get_all_days_to_forecast_on(self) -> list[int]:
+        all_days_to_forecast_to = list(range(1, len(self.cumulative_flow.total_closed_task_per_day) + 1))
+        all_days_to_forecast_on = [d - self.number_of_days_in_the_future for d in all_days_to_forecast_to]
+        return all_days_to_forecast_on
 
     def _get_velocity_on_day(self, forecast_day) -> float:
         first_day_of_velocity_interval = max(0, forecast_day - self.number_of_day_used_for_velocity)

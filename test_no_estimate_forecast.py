@@ -28,8 +28,14 @@ class TestNoEstimateForecastAllDays:
         assert forecaster.forecast_for_day(5) == 5.0
 
         expected_forecast = [0.0, 2.0, 3.0, 4.0, 5.0]
-        actual_forecast = forecaster.forecast_all_days()
+        actual_forecast = forecaster.forecast_for_all_days()
         assert actual_forecast == expected_forecast
+
+    def test_get_all_days_to_forecast_on_without_initial_hack(self):
+        project = project_closing_one_task_each_day(5)
+        forecaster = NoEstimateForecast(project, 3, 3)
+
+        assert forecaster._get_all_days_to_forecast_on() == [-2, -1, 0, 1, 2]
 
 
 class TestNoEstimateForecastSingleDay:

@@ -12,5 +12,5 @@ def compute_all_mmre(actuals: list[float], estimateds: list[float]) -> list[floa
     return [compute_mmre(actuals[index], estimateds[index]) for index, _ in enumerate(actuals)]
 
 
-def compute_all_signed_mmre(actuals: list[float], estimateds: list[float]) -> list[float]:
+def compute_all_signed_mmre_legacy(actuals: list[float], estimateds: list[float]) -> list[float]:
     return [compute_signed_mmre(actuals[index], estimateds[index]) for index, _ in enumerate(actuals)]

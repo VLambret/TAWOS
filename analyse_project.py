@@ -8,7 +8,7 @@ import matplotlib.figure
 
 from cumulative_flow import CumulativeFlow
 from indexed_dated_values import DatedValuesType, IndexedDatedValues
-from mmre import compute_all_signed_mmre
+from mmre import compute_all_signed_mmre_legacy
 from no_estimate_forecast import NoEstimateForecast
 
 
@@ -70,25 +70,28 @@ def main():
     # MRE part
     ###################
 
-    ideal_mmre = {k: 0.0 for k, v in cumulated_completed_task_per_day.items()}
-    mmre_to_plot = {"Actual": ideal_mmre}
+    ideal_mmre = IndexedDatedValues({d: 0.0 for d in project_activity.cumulated_completed_tasks.get_dates()})
+    mmre_to_plot: dict[str, IndexedDatedValues] = {"Actual": ideal_mmre}
+
+    ideal_mmre_legacy = {k: 0.0 for k, v in cumulated_completed_task_per_day.items()}
+    mmre_to_plot_legacy = {"Actual": ideal_mmre_legacy}
 
     for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
         estimates_legacy = forecaster.forecast_for_all_days_legacy()
 
-        mmre = compute_all_signed_mmre(list(cumulated_completed_task_per_day.values()), estimates_legacy)
+        mmre_legacy = compute_all_signed_mmre_legacy(list(cumulated_completed_task_per_day.values()), estimates_legacy)
 
         mmre_with_dates = {}
         for index, day in enumerate(cumulated_completed_task_per_day.keys()):
-            mmre_with_dates[day] = mmre[index]
+            mmre_with_dates[day] = mmre_legacy[index]
 
         tag = f'{n} days forecast'
 
-        mmre_to_plot[tag] = mmre_with_dates
+        mmre_to_plot_legacy[tag] = mmre_with_dates
 
     mmre_graph_file = Path(sys.argv[1]).parent / "graph_mmre"
-    show_graph(mmre_graph_file, old_to_new(mmre_to_plot))
+    show_graph(mmre_graph_file, old_to_new(mmre_to_plot_legacy))
 
 
 main()

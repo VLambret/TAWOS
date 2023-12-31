@@ -72,7 +72,7 @@ def main():
     ###################
 
     mmre_to_plot: dict[str, IndexedDatedValues] = {
-        tag: estimate.compute_signed_mmre_compared_to(actual) for tag, estimate in all_estimates_to_plot.items()
+        tag: estimate.compute_signed_mmre_compared_to_reference(actual) for tag, estimate in all_estimates_to_plot.items()
     }
 
     ideal_mmre_legacy = {k: 0.0 for k, v in cumulated_completed_task_per_day.items()}

@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 import sys
+from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 
@@ -19,11 +20,16 @@ def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, Indexe
     return all_data_to_plot
 
 
-def show_graph(filename: Path, all_data_to_plot: dict[str, IndexedDatedValues]):
+@dataclass
+class GraphLabels:
+    title: str
+
+
+def show_graph(graph_name: GraphLabels, filename: Path, all_data_to_plot: dict[str, IndexedDatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()
-    figure.suptitle(f'{filename} - Completed issues over time')
+    figure.suptitle(graph_name.title)
     figure_axis.set_xlabel('Date')
     figure_axis.set_ylabel('# of Completed issues')
 
@@ -45,10 +51,11 @@ def load_dates_from(project_csv: Path) -> list[date]:
 def main():
     project_csv = Path(sys.argv[1])
 
+    project_folder = project_csv.parent
+    project_name = project_csv.name.replace('_', " ").removesuffix(".csv")
+
     dates = load_dates_from(project_csv)
     project_activity = CumulativeFlow(dates)
-
-    cumulated_completed_task_per_day: DatedValuesType = project_activity.total_closed_task_per_day
 
     ###################
     # Estimates part
@@ -60,22 +67,25 @@ def main():
     for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
         estimates = forecaster.forecast_for_all_days()
-        tag = f'{n} days forecast'
+        tag = f'{n} days'
         all_estimates_to_plot[tag] = estimates
 
-    project_graph_file = Path(sys.argv[1]).parent / "graph_actual_work_and_estimates"
-    show_graph(project_graph_file, all_estimates_to_plot)
+    project_graph_file = project_folder / "graph_actual_work_and_estimates"
+    labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts")
+    show_graph(labels, project_graph_file, all_estimates_to_plot)
 
     ###################
     # MRE part
     ###################
 
     mmre_to_plot: dict[str, IndexedDatedValues] = {
-        tag: estimate.compute_signed_mmre_compared_to_reference(actual) for tag, estimate in all_estimates_to_plot.items()
+        tag: estimate.compute_signed_mmre_compared_to_reference(actual) for tag, estimate in
+        all_estimates_to_plot.items()
     }
 
-    mmre_graph_file = Path(sys.argv[1]).parent / "graph_mmre"
-    show_graph(mmre_graph_file, mmre_to_plot)
+    mmre_graph_file = project_folder / "graph_mmre"
+    labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts MMRE")
+    show_graph(labels, mmre_graph_file, mmre_to_plot)
 
 
 main()

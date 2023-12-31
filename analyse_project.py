@@ -6,6 +6,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from cumulative_flow import CumulativeFlow
+from no_estimate_forecast import NoEstimateForecast
 
 
 def show_graph(filename: Path, real_progress: dict[date, float], estimates: dict[date, float]):
@@ -24,7 +25,7 @@ def show_graph(filename: Path, real_progress: dict[date, float], estimates: dict
     figure_axis.set_ylabel('# of Completed issues')
 
     figure_axis.plot(progress_dates, progress_values)
-    figure_axis.plot(estimates_dates, estimates_values, marker='o')
+    figure_axis.plot(estimates_dates, estimates_values)
     figure.savefig(filename, dpi=300)
 
 
@@ -41,8 +42,16 @@ def main():
 
     cumulated_completed_task_per_day = project_activity.total_closed_task_per_day
 
+    forecaster = NoEstimateForecast(project_activity, 100, 100)
+
+    estimates = forecaster.forecast_all_days()
+    estimates_with_dates = {}
+    for index, day in enumerate(cumulated_completed_task_per_day.keys()):
+        estimates_with_dates[day] = estimates[index]
+
+
     project_graph_file = Path(sys.argv[1]).parent / "graph_actual_work_and_estimates"
-    show_graph(project_graph_file, cumulated_completed_task_per_day, {})
+    show_graph(project_graph_file, cumulated_completed_task_per_day, estimates_with_dates)
 
 
 main()

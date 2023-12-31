@@ -1,4 +1,5 @@
 import math
+from datetime import date
 
 from cumulative_flow import CumulativeFlow
 from indexed_dated_values import IndexedDatedValues
@@ -39,11 +40,11 @@ class NoEstimateForecast:
         return self._forecast_on_day(day_to_forecast_on, number_of_days_in_the_future)
 
     def forecast_for_all_days_legacy(self) -> list[float]:
-        all_days_to_forecast_to = range(1, len(self.cumulative_flow.total_closed_task_per_day) + 1)
-        return [self.forecast_for_day(d) for d in all_days_to_forecast_to]
+        return [float(v) for v in (self.forecast_for_all_days().get_values())]
 
     def forecast_for_all_days(self) -> IndexedDatedValues:
-        result = {v.date: v.value for v in self.cumulative_flow.cumulated_completed_tasks.values}
+        dates: list[date] = self.cumulative_flow.cumulated_completed_tasks.get_dates()
+        result = {date_value: self.forecast_for_day(day + 1) for day, date_value in enumerate(dates)}
         return IndexedDatedValues(result)
 
     def _get_velocity_on_day(self, forecast_day) -> float:

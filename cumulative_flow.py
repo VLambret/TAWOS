@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from pandas import date_range
 
-from dated_values import DatedValuesType
+from indexed_dated_values import DatedValuesType
 
 
 class CumulativeFlow:

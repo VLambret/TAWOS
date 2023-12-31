@@ -1,7 +1,7 @@
 from datetime import date
 
 from cumulative_flow import CumulativeFlow
-from dated_values import DatedValuesType
+from indexed_dated_values import DatedValuesType
 
 
 class TestCumulativeFlow:

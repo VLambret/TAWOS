@@ -29,17 +29,16 @@ class NoEstimateForecast:
 
         if self.use_blind_spot_workaround:
             day_to_forecast_on = max(day_to_forecast_on, 1)
-            if day_to_forecast_on == 1:
-                number_of_days_in_the_future = 0
-            if day_to_forecast_on == 2:
-                number_of_days_in_the_future = 1
 
+            overflow = day_to_forecast_on + self.number_of_days_in_the_future - day_to_forecast_for
+            if overflow > 0:
+                number_of_days_in_the_future = self.number_of_days_in_the_future - overflow
 
         return self._forecast_on_day(day_to_forecast_on, number_of_days_in_the_future)
 
     def forecast_for_all_days(self) -> list[float]:
         all_days_to_forecast_to = range(1, len(self.cumulative_flow.total_closed_task_per_day) + 1)
-        return [self.forecast_for_day(d) for d in (all_days_to_forecast_to)]
+        return [self.forecast_for_day(d) for d in all_days_to_forecast_to]
 
     def _get_velocity_on_day(self, forecast_day) -> float:
         first_day_of_velocity_interval = max(0, forecast_day - self.number_of_day_used_for_velocity)

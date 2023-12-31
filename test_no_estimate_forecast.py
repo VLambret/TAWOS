@@ -28,8 +28,28 @@ class TestNoEstimateForecastWithInternalBlindSpotWorkaround:
         (1, 3, 4.0),
         (2, 3, 5.0),
     ])
-    def test_future_can_be_forecasted_from_the_past(self, on_day, days_in_the_future, expected):
+    def test_internal_forecast_on_day(self, on_day, days_in_the_future, expected):
         assert self.perfect_project_forecaster._forecast_on_day(on_day, days_in_the_future) == expected
+
+    @pytest.mark.parametrize("day, expected", [
+        (1, 4.0),
+        (2, 5.0),
+        (3, 6.0),
+        (4, 7.0),
+        (5, 8.0),
+    ])
+    def test_forecast_on_day(self, day, expected):
+        assert self.perfect_project_forecaster.forecast_on_day(day) == expected
+
+    @pytest.mark.parametrize("day, expected", [
+        (1, 1.0),
+        (2, 2.0),
+        (3, 3.0),
+        (4, 4.0),
+        (5, 5.0),
+    ])
+    def test_forecast_for_day(self, day, expected):
+        assert self.perfect_project_forecaster.forecast_for_day(day) == expected
 
 
 class TestNoEstimateForecastAllDays:
@@ -53,23 +73,9 @@ class TestNoEstimateForecastAllDays:
 
         assert forecaster.forecast_for_all_days() == [0.0, 0.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 
-    @pytest.mark.skip()
     def test_get_all_days_to_forecast_on_with_initial_blind_spot_workaround(self):
         project = project_closing_one_task_each_day(10)
         forecaster = NoEstimateForecast(project, 3, 3, use_blind_spot_workaround=True)
-
-        assert forecaster._forecast_on_day(1.0, 0.0) == 1.0
-        assert forecaster._forecast_on_day(1.0, 1.0) == 2.0
-        assert forecaster._forecast_on_day(1.0, 2.0) == 3.0
-        assert forecaster._forecast_on_day(1.0, 3.0) == 4.0
-
-        assert forecaster.forecast_for_day(1.0) == 1.0
-        assert forecaster.forecast_for_day(2.0) == 2.0
-        assert forecaster.forecast_for_day(3.0) == 3.0
-        assert forecaster.forecast_for_day(4.0) == 4.0
-
-        assert forecaster.forecast_on_day(1.0) == 4.0
-
         assert forecaster.forecast_for_all_days() == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 
 

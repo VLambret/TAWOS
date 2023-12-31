@@ -23,3 +23,9 @@ class IndexedDatedValues:
             return False
 
         return self.values == other.values
+
+    def get_dates(self) -> list[date]:
+        return [v.date for v in self.values]
+
+    def get_values(self) -> list[int | float]:
+        return [v.value for v in self.values]

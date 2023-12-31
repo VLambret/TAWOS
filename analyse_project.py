@@ -7,12 +7,18 @@ import matplotlib
 import matplotlib.figure
 
 from cumulative_flow import CumulativeFlow
-from indexed_dated_values import DatedValuesType
+from indexed_dated_values import DatedValuesType, IndexedDatedValues
 from mmre import compute_all_signed_mmre
 from no_estimate_forecast import NoEstimateForecast
 
 
 def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValuesType]):
+
+    all_data_to_plot = {
+        k: IndexedDatedValues(v)
+        for k, v in all_data_to_plot.items()
+    }
+
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()
@@ -21,8 +27,8 @@ def show_graph(filename: Path, all_data_to_plot: dict[str, DatedValuesType]):
     figure_axis.set_ylabel('# of Completed issues')
 
     for label, data in all_data_to_plot.items():
-        estimates_dates = list(data.keys())
-        estimates_values = list(data.values())
+        estimates_dates = data.get_dates()
+        estimates_values = data.get_values()
         figure_axis.plot(estimates_dates, estimates_values, label=label)
 
     figure_axis.legend()

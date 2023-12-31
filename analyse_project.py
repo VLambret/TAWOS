@@ -3,6 +3,7 @@ import sys
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
+from statistics import mean
 
 import matplotlib
 import matplotlib.figure
@@ -64,7 +65,8 @@ def main():
     actual = project_activity.cumulated_completed_tasks
 
     estimate_periods = [1, 5, 10, 20, 30, 60, 90, 180, 240, 360]
-    all_estimates = {
+
+    all_estimates: dict[int: IndexedDatedValues] = {
         period: NoEstimateForecast(project_activity, period, period).forecast_for_all_days()
         for period in estimate_periods
     }
@@ -90,9 +92,9 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    mmre_graph_file = project_folder / "graph_signed_mmre"
+    signed_mmre_graph_file = project_folder / "graph_signed_mmre"
     labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts signed MMRE")
-    show_graph(labels, mmre_graph_file, mmre_to_plot)
+    show_graph(labels, signed_mmre_graph_file, mmre_to_plot)
 
     ###################
     # MMRE part
@@ -106,6 +108,21 @@ def main():
     mmre_graph_file = project_folder / "graph_mmre"
     labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts MMRE")
     show_graph(labels, mmre_graph_file, mmre_to_plot)
+
+    ###################
+    # MMRE Quality part
+    ###################
+
+    mmre_quality = {"MMRE quality": IndexedDatedValues(
+        {
+            period: mean(values.compute_mmre_compared_to_reference(actual).get_values())
+            for period, values in all_estimates.items()
+        })
+    }
+
+    mmre_quality_graph_file = project_folder / "graph_mmre_quality_per_period"
+    labels = GraphLabels(title=f"{project_name} - MMRE quality / period")
+    show_graph(labels, mmre_quality_graph_file, mmre_quality)
 
 
 main()

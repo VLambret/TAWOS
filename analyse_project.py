@@ -24,7 +24,7 @@ def show_graph(filename: Path, real_progress: dict[date, float], all_estimates: 
     for label, estimates in all_estimates.items():
         estimates_dates = list(estimates.keys())
         estimates_values = list(estimates.values())
-        figure_axis.plot(estimates_dates, estimates_values, label='Estimates')
+        figure_axis.plot(estimates_dates, estimates_values, label=label)
 
     figure_axis.legend()
 
@@ -46,14 +46,14 @@ def main():
 
     all_estimates = {}
 
-    for n in [30]:
+    for n in [30, 180, 360]:
         forecaster = NoEstimateForecast(project_activity, n, n)
         estimates = forecaster.forecast_all_days()
         estimates_with_dates = {}
         for index, day in enumerate(cumulated_completed_task_per_day.keys()):
             estimates_with_dates[day] = estimates[index]
 
-        all_estimates[f'{n}'] = estimates_with_dates
+        all_estimates[f'{n} days forecast'] = estimates_with_dates
 
 
     project_graph_file = Path(sys.argv[1]).parent / "graph_actual_work_and_estimates"

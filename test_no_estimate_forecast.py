@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+import pytest
 from pandas import date_range
 
 from cumulative_flow import CumulativeFlow
@@ -32,10 +33,17 @@ class TestNoEstimateForecastAllDays:
         assert actual_forecast == expected_forecast
 
     def test_get_all_days_to_forecast_on_without_initial_hack(self):
-        project = project_closing_one_task_each_day(5)
+        project = project_closing_one_task_each_day(10)
         forecaster = NoEstimateForecast(project, 3, 3)
 
-        assert forecaster._get_all_days_to_forecast_on() == [-2, -1, 0, 1, 2]
+        assert forecaster.forecast_for_all_days() == [0.0, 0.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+
+    @pytest.mark.skip(reason='Ignored at the moment')
+    def test_get_all_days_to_forecast_on_with_initial_blind_spot_workaround(self):
+        project = project_closing_one_task_each_day(10)
+        forecaster = NoEstimateForecast(project, 3, 3, use_blind_spot_workaround=True)
+
+        assert forecaster.forecast_for_all_days() == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 
 
 class TestNoEstimateForecastSingleDay:

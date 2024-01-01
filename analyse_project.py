@@ -21,11 +21,6 @@ def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, Indexe
     return all_data_to_plot
 
 
-@dataclass
-class GraphLabels:
-    title: str
-
-
 class Project:
     def __init__(self, dates_in_csv_file: str):
         dates_in_csv_file = Path(dates_in_csv_file)
@@ -36,13 +31,13 @@ class Project:
         self.activity = CumulativeFlow(dates)
 
 
-def show_graph(project, graph_name: GraphLabels, all_data_to_plot: dict[str, IndexedDatedValues]):
+def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
-    filename = project.folder / (graph_name.title.replace(' ', '_') + ".png")
+    filename = project.folder / (title.replace(' ', '_') + ".png")
 
     figure_axis = figure.add_subplot()
-    figure.suptitle(f"{project.name} - {graph_name.title}")
+    figure.suptitle(f"{project.name} - {title}")
     figure_axis.set_xlabel('Date')
     figure_axis.set_ylabel('# of Completed issues')
 
@@ -76,8 +71,7 @@ def main():
     for n in [180, 360]:
         all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 
-    labels = GraphLabels(title="cumulated completed task forecasts")
-    show_graph(project, labels, all_estimates_to_plot)
+    save_as_graph(project, "cumulated completed task forecasts", all_estimates_to_plot)
 
     ###################
     # Signed MMRE part
@@ -88,8 +82,7 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    labels = GraphLabels(title="cumulated completed task forecasts signed MMRE")
-    show_graph(project, labels, mmre_to_plot)
+    save_as_graph(project, "cumulated completed task forecasts signed MMRE", mmre_to_plot)
 
     ###################
     # MMRE part
@@ -100,8 +93,7 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    labels = GraphLabels(title="cumulated completed task forecasts MMRE")
-    show_graph(project, labels, mmre_to_plot)
+    save_as_graph(project, "cumulated completed task forecasts MMRE", mmre_to_plot)
 
     ###################
     # MMRE Quality part
@@ -114,8 +106,7 @@ def main():
         })
     }
 
-    labels = GraphLabels(title="MMRE quality per period")
-    show_graph(project, labels, mmre_quality)
+    save_as_graph(project, "MMRE quality per period", mmre_quality)
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

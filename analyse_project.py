@@ -96,6 +96,20 @@ def main():
                   "Average MMRE for each period",
                   mmre_quality)
 
+    # Use completion in last period instead of total
+    period_for_last_completion = 360
+    estimates_with_periodic_total = {
+        k: v.group_differences_by_period(period_for_last_completion)
+        for k, v in all_estimates_to_plot.items()
+    }
+    save_as_graph(project,
+                  f"Tasks completed in the last {period_for_last_completion} for each day",
+                  estimates_with_periodic_total)
+
+
+
+
+
 
 def compute_mmre(reference, estimates):
     return {

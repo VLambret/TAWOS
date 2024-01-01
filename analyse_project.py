@@ -58,9 +58,9 @@ def load_dates_from(project_csv: Path) -> list[date]:
 def main():
     project = Project(sys.argv[1])
 
-    ###################
-    # Estimates part
-    ###################
+    ################################################################################
+    # USING TOTAL CUMULATED COMPLETED TASKS
+    ################################################################################
 
     actual_total_completed_tasks_per_day = project.activity.cumulated_completed_tasks
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
@@ -96,19 +96,24 @@ def main():
                   "Average MMRE for each period",
                   mmre_quality)
 
-    # Use completion in last period instead of total
-    period_for_last_completion = 360
+    ################################################################################
+    # USING COMPLETED TASK IN THE LAST PERIOD
+    ################################################################################
+
+    all_completed_tasks_in_last_period_estimates = compute_completed_task_last_period(all_estimates_to_plot, 360)
+    save_as_graph(project,
+                  f"Tasks completed in the last period for each day",
+                  all_completed_tasks_in_last_period_estimates)
+
+    # MMRE - prediction quality for each period
+
+
+def compute_completed_task_last_period(all_estimates_to_plot, period_for_last_completion):
     estimates_with_periodic_total = {
-        k: v.group_differences_by_period(period_for_last_completion)
+        k: v.compute_completed_task_last_period(period_for_last_completion)
         for k, v in all_estimates_to_plot.items()
     }
-    save_as_graph(project,
-                  f"Tasks completed in the last {period_for_last_completion} for each day",
-                  estimates_with_periodic_total)
-
-
-
-
+    return estimates_with_periodic_total
 
 
 def compute_mmre(reference, estimates):

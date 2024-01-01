@@ -61,7 +61,7 @@ class TestIndexedDatedValues:
             date(2023, 1, 7): 8.0,
         })
 
-        grouped_diff = increasing_values_each_day.group_differences_by_period(3)
+        grouped_diff = increasing_values_each_day.compute_completed_task_last_period(3)
 
         expected = IndexedDatedValues({
             date(2023, 1, 1): 1.0,

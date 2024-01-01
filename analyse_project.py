@@ -1,6 +1,5 @@
 #! /usr/bin/python3
 import sys
-from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 from statistics import mean
@@ -63,50 +62,55 @@ def main():
     # Estimates part
     ###################
 
-    actual = project.activity.cumulated_completed_tasks
-
+    actual_total_completed_tasks_per_day = project.activity.cumulated_completed_tasks
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
 
-    all_estimates_to_plot: dict[str, IndexedDatedValues] = {"Actual": actual}
+    all_estimates_to_plot: dict[str, IndexedDatedValues] = {"Actual": actual_total_completed_tasks_per_day}
     for n in [180, 360]:
         all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 
     save_as_graph(project, "cumulated completed task forecasts", all_estimates_to_plot)
 
-    ###################
-    # Signed MMRE part
-    ###################
+    # Signed MMRE
+    signed_mmre_to_plot = compute_signed_mmre(actual_total_completed_tasks_per_day,
+                                       all_estimates_to_plot)
+    save_as_graph(project,
+                  "cumulated completed task forecasts signed MMRE",
+                  signed_mmre_to_plot)
 
-    mmre_to_plot: dict[str, IndexedDatedValues] = {
-        tag: estimate.compute_signed_mmre_compared_to_reference(actual) for tag, estimate in
-        all_estimates_to_plot.items()
-    }
+    # MMRE
+    mmre_to_plot = compute_mmre(actual_total_completed_tasks_per_day,
+                                all_estimates_to_plot)
+    save_as_graph(project,
+                  "cumulated completed task forecasts MMRE",
+                  mmre_to_plot)
 
-    save_as_graph(project, "cumulated completed task forecasts signed MMRE", mmre_to_plot)
-
-    ###################
-    # MMRE part
-    ###################
-
-    mmre_to_plot: dict[str, IndexedDatedValues] = {
-        tag: estimate.compute_mmre_compared_to_reference(actual) for tag, estimate in
-        all_estimates_to_plot.items()
-    }
-
-    save_as_graph(project, "cumulated completed task forecasts MMRE", mmre_to_plot)
-
-    ###################
-    # MMRE Quality part
-    ###################
-
+    # MMRE Quality
     mmre_quality = {"MMRE quality": IndexedDatedValues(
         {
-            period: mean(values.compute_mmre_compared_to_reference(actual).get_values())
+            period: mean(values.compute_mmre_compared_to_reference(actual_total_completed_tasks_per_day).get_values())
             for period, values in all_total_completed_tasks_per_day_estimates.items()
         })
     }
+    save_as_graph(project,
+                  "Average MMRE for each period",
+                  mmre_quality)
 
-    save_as_graph(project, "MMRE quality per period", mmre_quality)
+
+def compute_mmre(reference, estimates):
+    return {
+        tag: estimate.compute_mmre_compared_to_reference(reference) for tag, estimate
+        in
+        estimates.items()
+    }
+
+
+def compute_signed_mmre(reference, estimates):
+    return {
+        tag: estimate.compute_signed_mmre_compared_to_reference(reference) for tag, estimate
+        in
+        estimates.items()
+    }
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

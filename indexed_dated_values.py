@@ -47,3 +47,14 @@ class IndexedDatedValues:
             compared = v.value
             r[v.date] = compute_signed_mmre(actual, compared)
         return IndexedDatedValues(r)
+
+    def group_differences_by_period(self, period_in_days: int) -> "IndexedDatedValues":
+        r = {}
+        for index, v in enumerate(self.values):
+            period_start = index - period_in_days
+            if period_start < 0:
+                start_value = 0
+            else:
+                start_value = self.values[period_start].value
+            r[v.date] = v.value - start_value
+        return IndexedDatedValues(r)

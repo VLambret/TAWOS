@@ -49,3 +49,28 @@ class TestIndexedDatedValues:
             date(2023, 1, 4): -0.5,
         })
         assert mmre.values == expected.values
+
+    def test_group_diff_by_period(self):
+        increasing_values_each_day = IndexedDatedValues({
+            date(2023, 1, 1): 1.0,
+            date(2023, 1, 2): 2.0,
+            date(2023, 1, 3): 3.0,
+            date(2023, 1, 4): 4.0,
+            date(2023, 1, 5): 5.0,
+            date(2023, 1, 6): 6.0,
+            date(2023, 1, 7): 8.0,
+        })
+
+        grouped_diff = increasing_values_each_day.group_differences_by_period(3)
+
+        expected = IndexedDatedValues({
+            date(2023, 1, 1): 1.0,
+            date(2023, 1, 2): 2.0,
+            date(2023, 1, 3): 3.0,
+            date(2023, 1, 4): 3.0,
+            date(2023, 1, 5): 3.0,
+            date(2023, 1, 6): 3.0,
+            date(2023, 1, 7): 4.0,
+        })
+
+        assert grouped_diff.values == expected.values

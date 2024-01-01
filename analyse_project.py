@@ -49,38 +49,33 @@ def load_dates_from(project_csv: Path) -> list[date]:
         return [datetime.strptime(d.strip(), "%Y-%m-%d").date() for d in f.readlines()]
 
 
+class Project:
+    def __init__(self, dates_in_csv_file: str):
+        dates_in_csv_file = Path(dates_in_csv_file)
+        dates = load_dates_from(dates_in_csv_file)
+
+        self.folder: Path = dates_in_csv_file.parent
+        self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
+        self.activity = CumulativeFlow(dates)
+
+
 def main():
-    project_csv = Path(sys.argv[1])
-
-    project_folder = project_csv.parent
-    project_name = project_csv.name.replace('_', " ").removesuffix(".csv")
-
-    dates = load_dates_from(project_csv)
-    project_activity = CumulativeFlow(dates)
+    project = Project(sys.argv[1])
 
     ###################
     # Estimates part
     ###################
 
-    actual = project_activity.cumulated_completed_tasks
+    actual = project.activity.cumulated_completed_tasks
 
-    estimate_periods = [1, 5, 10, 20, 30, 60, 90, 180, 240, 360]
-
-    all_estimates: dict[int: IndexedDatedValues] = {
-        period: NoEstimateForecast(project_activity, period, period).forecast_for_all_days()
-        for period in estimate_periods
-    }
+    all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
 
     all_estimates_to_plot: dict[str, IndexedDatedValues] = {"Actual": actual}
+    for n in [180, 360]:
+        all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 
-    for n in [30, 180, 360]:
-        forecaster = NoEstimateForecast(project_activity, n, n)
-        estimates = forecaster.forecast_for_all_days()
-        tag = f'{n} days'
-        all_estimates_to_plot[tag] = estimates
-
-    project_graph_file = project_folder / "graph_actual_work_and_estimates"
-    labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts")
+    project_graph_file = project.folder / "graph_actual_work_and_estimates"
+    labels = GraphLabels(title=f"{project.name} - cumulated completed task forecasts")
     show_graph(labels, project_graph_file, all_estimates_to_plot)
 
     ###################
@@ -92,8 +87,8 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    signed_mmre_graph_file = project_folder / "graph_signed_mmre"
-    labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts signed MMRE")
+    signed_mmre_graph_file = project.folder / "graph_signed_mmre"
+    labels = GraphLabels(title=f"{project.name} - cumulated completed task forecasts signed MMRE")
     show_graph(labels, signed_mmre_graph_file, mmre_to_plot)
 
     ###################
@@ -105,8 +100,8 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    mmre_graph_file = project_folder / "graph_mmre"
-    labels = GraphLabels(title=f"{project_name} - cumulated completed task forecasts MMRE")
+    mmre_graph_file = project.folder / "graph_mmre"
+    labels = GraphLabels(title=f"{project.name} - cumulated completed task forecasts MMRE")
     show_graph(labels, mmre_graph_file, mmre_to_plot)
 
     ###################
@@ -116,13 +111,22 @@ def main():
     mmre_quality = {"MMRE quality": IndexedDatedValues(
         {
             period: mean(values.compute_mmre_compared_to_reference(actual).get_values())
-            for period, values in all_estimates.items()
+            for period, values in all_total_completed_tasks_per_day_estimates.items()
         })
     }
 
-    mmre_quality_graph_file = project_folder / "graph_mmre_quality_per_period"
-    labels = GraphLabels(title=f"{project_name} - MMRE quality / period")
+    mmre_quality_graph_file = project.folder / "graph_mmre_quality_per_period"
+    labels = GraphLabels(title=f"{project.name} - MMRE quality / period")
     show_graph(labels, mmre_quality_graph_file, mmre_quality)
+
+
+def get_all_total_completed_tasks_per_day_estimates(project_activity):
+    estimate_periods = [1, 5, 10, 20, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720]
+    all_estimates: dict[int: IndexedDatedValues] = {
+        period: NoEstimateForecast(project_activity, period, period).forecast_for_all_days()
+        for period in estimate_periods
+    }
+    return all_estimates
 
 
 main()

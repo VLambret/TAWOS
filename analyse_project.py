@@ -36,8 +36,10 @@ class Project:
         self.activity = CumulativeFlow(dates)
 
 
-def show_graph(project, filename: Path, graph_name: GraphLabels, all_data_to_plot: dict[str, IndexedDatedValues]):
+def show_graph(project, graph_name: GraphLabels, all_data_to_plot: dict[str, IndexedDatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
+
+    filename = project.folder / (graph_name.title.replace(' ', '_') + ".png")
 
     figure_axis = figure.add_subplot()
     figure.suptitle(f"{project.name} - {graph_name.title}")
@@ -74,9 +76,8 @@ def main():
     for n in [180, 360]:
         all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 
-    project_graph_file = project.folder / "graph_actual_work_and_estimates"
     labels = GraphLabels(title="cumulated completed task forecasts")
-    show_graph(project, project_graph_file, labels, all_estimates_to_plot)
+    show_graph(project, labels, all_estimates_to_plot)
 
     ###################
     # Signed MMRE part
@@ -87,9 +88,8 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    signed_mmre_graph_file = project.folder / "graph_signed_mmre"
     labels = GraphLabels(title="cumulated completed task forecasts signed MMRE")
-    show_graph(project, signed_mmre_graph_file, labels, mmre_to_plot)
+    show_graph(project, labels, mmre_to_plot)
 
     ###################
     # MMRE part
@@ -100,9 +100,8 @@ def main():
         all_estimates_to_plot.items()
     }
 
-    mmre_graph_file = project.folder / "graph_mmre"
     labels = GraphLabels(title="cumulated completed task forecasts MMRE")
-    show_graph(project, mmre_graph_file, labels, mmre_to_plot)
+    show_graph(project, labels, mmre_to_plot)
 
     ###################
     # MMRE Quality part
@@ -115,9 +114,8 @@ def main():
         })
     }
 
-    mmre_quality_graph_file = project.folder / "graph_mmre_quality_per_period"
     labels = GraphLabels(title="MMRE quality per period")
-    show_graph(project, mmre_quality_graph_file, labels, mmre_quality)
+    show_graph(project, labels, mmre_quality)
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

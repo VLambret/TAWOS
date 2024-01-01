@@ -26,11 +26,21 @@ class GraphLabels:
     title: str
 
 
-def show_graph(graph_name: GraphLabels, filename: Path, all_data_to_plot: dict[str, IndexedDatedValues]):
+class Project:
+    def __init__(self, dates_in_csv_file: str):
+        dates_in_csv_file = Path(dates_in_csv_file)
+        dates = load_dates_from(dates_in_csv_file)
+
+        self.folder: Path = dates_in_csv_file.parent
+        self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
+        self.activity = CumulativeFlow(dates)
+
+
+def show_graph(project, filename: Path, graph_name: GraphLabels, all_data_to_plot: dict[str, IndexedDatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))
 
     figure_axis = figure.add_subplot()
-    figure.suptitle(graph_name.title)
+    figure.suptitle(f"{project.name} - {graph_name.title}")
     figure_axis.set_xlabel('Date')
     figure_axis.set_ylabel('# of Completed issues')
 
@@ -49,16 +59,6 @@ def load_dates_from(project_csv: Path) -> list[date]:
         return [datetime.strptime(d.strip(), "%Y-%m-%d").date() for d in f.readlines()]
 
 
-class Project:
-    def __init__(self, dates_in_csv_file: str):
-        dates_in_csv_file = Path(dates_in_csv_file)
-        dates = load_dates_from(dates_in_csv_file)
-
-        self.folder: Path = dates_in_csv_file.parent
-        self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
-        self.activity = CumulativeFlow(dates)
-
-
 def main():
     project = Project(sys.argv[1])
 
@@ -75,8 +75,8 @@ def main():
         all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 
     project_graph_file = project.folder / "graph_actual_work_and_estimates"
-    labels = GraphLabels(title=f"{project.name} - cumulated completed task forecasts")
-    show_graph(labels, project_graph_file, all_estimates_to_plot)
+    labels = GraphLabels(title="cumulated completed task forecasts")
+    show_graph(project, project_graph_file, labels, all_estimates_to_plot)
 
     ###################
     # Signed MMRE part
@@ -88,8 +88,8 @@ def main():
     }
 
     signed_mmre_graph_file = project.folder / "graph_signed_mmre"
-    labels = GraphLabels(title=f"{project.name} - cumulated completed task forecasts signed MMRE")
-    show_graph(labels, signed_mmre_graph_file, mmre_to_plot)
+    labels = GraphLabels(title="cumulated completed task forecasts signed MMRE")
+    show_graph(project, signed_mmre_graph_file, labels, mmre_to_plot)
 
     ###################
     # MMRE part
@@ -101,8 +101,8 @@ def main():
     }
 
     mmre_graph_file = project.folder / "graph_mmre"
-    labels = GraphLabels(title=f"{project.name} - cumulated completed task forecasts MMRE")
-    show_graph(labels, mmre_graph_file, mmre_to_plot)
+    labels = GraphLabels(title="cumulated completed task forecasts MMRE")
+    show_graph(project, mmre_graph_file, labels, mmre_to_plot)
 
     ###################
     # MMRE Quality part
@@ -116,8 +116,8 @@ def main():
     }
 
     mmre_quality_graph_file = project.folder / "graph_mmre_quality_per_period"
-    labels = GraphLabels(title=f"{project.name} - MMRE quality / period")
-    show_graph(labels, mmre_quality_graph_file, mmre_quality)
+    labels = GraphLabels(title="MMRE quality per period")
+    show_graph(project, mmre_quality_graph_file, labels, mmre_quality)
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

@@ -105,7 +105,7 @@ def main():
                   f"Tasks completed in the last period for each day",
                   all_completed_tasks_in_last_period_estimates)
 
-    # MMRE - prediction quality for each period
+    # periodical MMRE
 
     all_periodical_mmre: dict[str, IndexedDatedValues] = {}
     for period, estimates in all_total_completed_tasks_per_day_estimates.items():
@@ -117,6 +117,18 @@ def main():
     save_as_graph(project,
                   "All periodical_mmre",
                   all_periodical_mmre)
+
+    # periodical MMRE quality
+
+    all_periodical_mmre_quality = {"MMRE quality": IndexedDatedValues(
+        {
+            period: mean(values.compute_mmre_compared_to_reference(actual_total_completed_tasks_per_day).get_values())
+            for period, values in all_periodical_mmre.items()
+        })
+    }
+    save_as_graph(project,
+                  "Periodical MMRE quality",
+                  all_periodical_mmre_quality)
 
 
 

@@ -100,17 +100,36 @@ def main():
     # USING COMPLETED TASK IN THE LAST PERIOD
     ################################################################################
 
-    all_completed_tasks_in_last_period_estimates = compute_completed_task_last_period(all_estimates_to_plot, 360)
+    all_completed_tasks_in_last_period_estimates = compute_completed_task_last_period(all_estimates_to_plot)
     save_as_graph(project,
                   f"Tasks completed in the last period for each day",
                   all_completed_tasks_in_last_period_estimates)
 
     # MMRE - prediction quality for each period
 
+    all_periodical_mmre: dict[str, IndexedDatedValues] = {}
+    for period, estimates in all_total_completed_tasks_per_day_estimates.items():
+        periodical_reference = actual_total_completed_tasks_per_day.compute_completed_task_last_period(period)
+        periodical_tasks = estimates.compute_completed_task_last_period(period)
+        periodical_mmre = periodical_tasks.compute_mmre_compared_to_reference(periodical_reference)
+        all_periodical_mmre[f'{period} days'] = periodical_mmre
 
-def compute_completed_task_last_period(all_estimates_to_plot, period_for_last_completion):
+    save_as_graph(project,
+                  "All periodical_mmre",
+                  all_periodical_mmre)
+
+
+
+def compute_completed_task_last_period(all_estimates_to_plot):
+
+    def period(key: str):
+        if "days" in key:
+            return int(key.removesuffix("days"))
+        else:
+            return 360
+
     estimates_with_periodic_total = {
-        k: v.compute_completed_task_last_period(period_for_last_completion)
+        k: v.compute_completed_task_last_period(period(k))
         for k, v in all_estimates_to_plot.items()
     }
     return estimates_with_periodic_total

@@ -1,10 +1,11 @@
-import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 from model.indexed_dated_values import IndexedDatedValues
 
 
 def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):
-    figure = matplotlib.figure.Figure(figsize=(8, 6))
+    figure = Figure(figsize=(8, 6))
 
     filename = project.folder / (title.replace(' ', '_') + ".png")
 

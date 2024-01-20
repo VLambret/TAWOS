@@ -3,8 +3,8 @@ from datetime import date, timedelta
 import pytest
 from pandas import date_range
 
-from cumulative_flow import CumulativeFlow
-from no_estimate_forecast import NoEstimateForecast
+from src.cumulative_flow import CumulativeFlow
+from src.no_estimate_forecast import NoEstimateForecast
 
 
 def project_completing_exactly_one_task_each_day(project_duration):

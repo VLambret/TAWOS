@@ -29,6 +29,9 @@ class Project:
         self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
         self.activity = NormalizedTimeSeries(dates)
 
+class Graph:
+    def __init__(self):
+        pass
 
 def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):
     figure = matplotlib.figure.Figure(figsize=(8, 6))

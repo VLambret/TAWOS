@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 
-from mmre import compute_signed_mmre, compute_mmre
+from evaluation_tools.mmre import compute_signed_mmre, compute_mmre
 
 DatedValuesType = dict[date, [float | int]]
 

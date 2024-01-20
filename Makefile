@@ -6,7 +6,7 @@ all:
 
 clean :
 
-.PHONY : test pytest integration_tests pylint coverage
+.PHONY : test pytest pylint coverage mypy
 
 test : pytest
 
@@ -21,5 +21,8 @@ pylint:
 
 install_dependencies:
 	pip install -r requirements.txt
+
+mypy:
+	mypy src
 
 

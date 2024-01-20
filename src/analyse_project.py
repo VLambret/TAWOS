@@ -172,4 +172,5 @@ def get_all_total_completed_tasks_per_day_estimates(project_activity):
     return all_estimates
 
 
-main()
+if __name__ == "__main__":
+    main()

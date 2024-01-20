@@ -53,6 +53,7 @@ class IndexedDatedValues:
         r = {}
         for index, v in enumerate(self.values):
             period_start = index - period_in_days
+            start_value: int | float
             if period_start < 0:
                 start_value = 0
             else:

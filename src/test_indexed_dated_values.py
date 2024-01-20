@@ -1,6 +1,6 @@
 from datetime import date
 
-from src.indexed_dated_values import IndexedDatedValues, DatedValue
+from indexed_dated_values import IndexedDatedValues, DatedValue
 
 
 class TestIndexedDatedValues:

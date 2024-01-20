@@ -25,7 +25,7 @@ class NormalizedTimeSeries:
         self.total_closed_task_per_day: DatedValuesType = result
         self.cumulated_completed_tasks: IndexedDatedValues = IndexedDatedValues(result)
 
-    def get_total_completed_task_on_day(self, day_number: int) -> int:
+    def get_total_completed_task_on_day(self, day_number: int) -> int | float:
         date_from_day_number = self.first_day + timedelta(days=day_number - 1)
 
         if date_from_day_number < self.first_day:
@@ -36,5 +36,5 @@ class NormalizedTimeSeries:
 
         return self.total_closed_task_per_day[date_from_day_number]
 
-    def get_closed_tasks_in(self, start, end) -> int:
+    def get_closed_tasks_in(self, start, end) -> int | float:
         return self.get_total_completed_task_on_day(end) - self.get_total_completed_task_on_day(start)

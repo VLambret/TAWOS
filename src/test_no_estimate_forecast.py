@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import pytest
 from pandas import date_range
 
-from cumulative_flow import NormalizedTimeSeries
+from normalized_time_series import NormalizedTimeSeries
 from no_estimate_forecast import NoEstimateForecast
 
 

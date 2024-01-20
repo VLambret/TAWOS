@@ -1,6 +1,6 @@
 from datetime import date
 
-from cumulative_flow import NormalizedTimeSeries
+from normalized_time_series import NormalizedTimeSeries
 from indexed_dated_values import DatedValuesType
 
 

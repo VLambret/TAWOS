@@ -7,7 +7,7 @@ from statistics import mean
 import matplotlib
 import matplotlib.figure
 
-from cumulative_flow import NormalizedTimeSeries
+from normalized_time_series import NormalizedTimeSeries
 from indexed_dated_values import DatedValuesType, IndexedDatedValues
 from no_estimate_forecast import NoEstimateForecast
 

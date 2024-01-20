@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from pandas import date_range
 
-from indexed_dated_values import DatedValuesType, IndexedDatedValues
+from model.indexed_dated_values import DatedValuesType, IndexedDatedValues
 
 
 class NormalizedTimeSeries:

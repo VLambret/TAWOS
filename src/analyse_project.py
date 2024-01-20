@@ -8,7 +8,7 @@ import matplotlib
 import matplotlib.figure
 
 from model.normalized_time_series import NormalizedTimeSeries
-from indexed_dated_values import DatedValuesType, IndexedDatedValues
+from model.indexed_dated_values import DatedValuesType, IndexedDatedValues
 from forecast_methods.no_estimate_forecast import NoEstimateForecast
 
 

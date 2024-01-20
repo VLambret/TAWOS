@@ -9,7 +9,7 @@ import matplotlib.figure
 
 from model.normalized_time_series import NormalizedTimeSeries
 from indexed_dated_values import DatedValuesType, IndexedDatedValues
-from no_estimate_forecast import NoEstimateForecast
+from forecast_methods.no_estimate_forecast import NoEstimateForecast
 
 
 def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, IndexedDatedValues]:

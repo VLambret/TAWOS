@@ -18,3 +18,5 @@ coverage:
 
 pylint:
 	pylint --rcfile=pylintrc src/*.py src/*/*.py
+
+

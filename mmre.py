@@ -1,7 +1,7 @@
 # MMRE: Mean Magnitude of Relative Error
 def compute_signed_mmre(actual: float, estimated: float) -> float:
     if estimated == actual:
-        return 1
+        return 0
     if actual == 0:
         return 1
     return (estimated - actual) / actual

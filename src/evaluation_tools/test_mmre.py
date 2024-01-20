@@ -1,5 +1,5 @@
 import pytest
-from mmre import compute_mmre, compute_signed_mmre
+from evaluation_tools.mmre import compute_mmre, compute_signed_mmre
 
 
 class TestMRE:

@@ -1,15 +1,16 @@
 from dataclasses import dataclass
 from datetime import date
+from typing import Dict
 
 from evaluation_tools.mmre import compute_signed_mmre, compute_mmre
 
-DatedValuesType = dict[date, [float | int]]
+DatedValuesType = Dict[date, float | int]
 
 
 @dataclass
 class DatedValue:
     date: date
-    value: [int | float]
+    value: int | float
 
 
 class IndexedDatedValues:

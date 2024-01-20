@@ -1,7 +1,7 @@
 import math
 from datetime import date
 
-from normalized_time_series import NormalizedTimeSeries
+from model.normalized_time_series import NormalizedTimeSeries
 from indexed_dated_values import IndexedDatedValues
 
 

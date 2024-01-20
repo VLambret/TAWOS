@@ -11,10 +11,10 @@ clean :
 test : pytest
 
 pytest:
-	py.test-3
+	PYTHONPATH=src py.test-3
 
 coverage:
-	py.test-3 --cov=src --cov-report term-missing
+	PYTHONPATH=src py.test-3 --cov=src --cov-report term-missing
 
 pylint:
-	pylint --rcfile=pylintrc src/*.py
+	pylint --rcfile=pylintrc src/*.py src/*/*.py

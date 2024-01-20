@@ -4,9 +4,7 @@ from datetime import date, datetime
 from pathlib import Path
 from statistics import mean
 
-import matplotlib
-import matplotlib.figure
-
+from graph import save_as_graph
 from model.normalized_time_series import NormalizedTimeSeries
 from model.indexed_dated_values import DatedValuesType, IndexedDatedValues
 from forecast_methods.no_estimate_forecast import NoEstimateForecast
@@ -28,25 +26,6 @@ class Project:
         self.folder: Path = dates_in_csv_file.parent
         self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
         self.activity = NormalizedTimeSeries(dates)
-
-def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):
-    figure = matplotlib.figure.Figure(figsize=(8, 6))
-
-    filename = project.folder / (title.replace(' ', '_') + ".png")
-
-    figure_axis = figure.add_subplot()
-    figure.suptitle(f"{project.name} - {title}")
-    figure_axis.set_xlabel('Date')
-    figure_axis.set_ylabel('# of Completed issues')
-
-    for label, data in all_data_to_plot.items():
-        estimates_dates = data.get_dates()
-        estimates_values = data.get_values()
-        figure_axis.plot(estimates_dates, estimates_values, label=label)
-
-    figure_axis.legend()
-
-    figure.savefig(filename, dpi=300)
 
 
 def load_dates_from(project_csv: Path) -> list[date]:

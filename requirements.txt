@@ -5,3 +5,9 @@ pytest-cov==2.12.1
 # static analysis
 mypy==1.8.0
 pylint==2.11.1
+
+pandas==2.1.4
+pandas-stubs==2.1.4.231227
+
+matplotlib==3.8.2
+matplotlib-stubs==0.2.0

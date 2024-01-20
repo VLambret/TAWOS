@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import pytest
 from pandas import date_range
 
-from cumulative_flow import CumulativeFlow
+from cumulative_flow import NormalizedTimeSeries
 from no_estimate_forecast import NoEstimateForecast
 
 
@@ -14,7 +14,7 @@ def project_completing_exactly_one_task_each_day(project_duration):
         start + timedelta(days=project_duration - 1),
     )]
 
-    return CumulativeFlow(each_date_once_in_interval)
+    return NormalizedTimeSeries(each_date_once_in_interval)
 
 
 def project_increasing_velocity_each_day(project_duration):
@@ -24,7 +24,7 @@ def project_increasing_velocity_each_day(project_duration):
     for index, d in enumerate(date_range(start, start + timedelta(days=project_duration - 1))):
         one_more_task_completed_each_day += [d.date()] * index
 
-    return CumulativeFlow(one_more_task_completed_each_day)
+    return NormalizedTimeSeries(one_more_task_completed_each_day)
 
 
 class TestPerfectProject_WithInitialWorkaround:

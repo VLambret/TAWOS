@@ -1,13 +1,13 @@
 import math
 from datetime import date
 
-from cumulative_flow import CumulativeFlow
+from cumulative_flow import NormalizedTimeSeries
 from indexed_dated_values import IndexedDatedValues
 
 
 class NoEstimateForecast:
     def __init__(self,
-                 cumulative_flow: CumulativeFlow,
+                 cumulative_flow: NormalizedTimeSeries,
                  using_last_days: int,
                  on_the_next_days: int,
                  use_blind_spot_workaround=True):

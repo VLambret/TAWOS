@@ -6,7 +6,7 @@ from pandas import date_range
 from indexed_dated_values import DatedValuesType, IndexedDatedValues
 
 
-class CumulativeFlow:
+class NormalizedTimeSeries:
     def __init__(self, dates: list[date]):
         self.first_day: date = min(dates)
         self.last_day: date = max(dates)

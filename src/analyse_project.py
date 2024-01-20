@@ -7,7 +7,7 @@ from statistics import mean
 import matplotlib
 import matplotlib.figure
 
-from cumulative_flow import CumulativeFlow
+from cumulative_flow import NormalizedTimeSeries
 from indexed_dated_values import DatedValuesType, IndexedDatedValues
 from no_estimate_forecast import NoEstimateForecast
 
@@ -27,7 +27,7 @@ class Project:
 
         self.folder: Path = dates_in_csv_file.parent
         self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
-        self.activity = CumulativeFlow(dates)
+        self.activity = NormalizedTimeSeries(dates)
 
 
 def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):

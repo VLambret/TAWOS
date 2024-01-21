@@ -40,7 +40,8 @@ clean_projects:
 	rm -f projects/*/*.png
 
 projects/.%.done: projects/%
-	@echo $<
+	python3 src/main.py $</*.csv
+	touch $@
 
 
 

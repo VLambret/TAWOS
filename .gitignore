@@ -1,3 +1,4 @@
 TAWOS.sql
 *.png
 .coverage
+.*.done

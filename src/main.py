@@ -19,16 +19,12 @@ class Project:
         self.folder: Path = dates_in_csv_file.parent
         self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
         self.activity = NormalizedTimeSeries(dates)
+        self.filtered_activity = NormalizedTimeSeries(dates, filter=True)
 
 
 def load_dates_from(project_csv: Path) -> list[date]:
     with project_csv.open('r') as f:
         return [datetime.strptime(d.strip(), "%Y-%m-%d").date() for d in f.readlines()]
-
-
-def filter_anomalies(unfiltered_reality: CumulativeTimeSeries) -> CumulativeTimeSeries:
-    return unfiltered_reality
-
 
 def main():
     project = Project(sys.argv[1])
@@ -38,7 +34,7 @@ def main():
     ################################################################################
 
     real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
-    filtered_real_total_completed_tasks_per_day = filter_anomalies(real_total_completed_tasks_per_day)
+    filtered_real_total_completed_tasks_per_day: CumulativeTimeSeries = project.filtered_activity.cumulated_completed_tasks
 
     unfiltered_reality: dict[str, CumulativeTimeSeries] = {
         "Unfiltered": real_total_completed_tasks_per_day,

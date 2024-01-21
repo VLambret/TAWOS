@@ -7,7 +7,7 @@ from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSe
 
 
 class NormalizedTimeSeries:
-    def __init__(self, dates: list[date]):
+    def __init__(self, dates: list[date], filter=False):
         self.first_day: date = min(dates)
         self.last_day: date = max(dates)
 

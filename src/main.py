@@ -72,7 +72,7 @@ def main():
     save_as_graph(project,
                   "cumulated completed task forecasts signed MMRE",
                   "Date",
-                  'MMRE',
+                  'Signed MMRE',
                   signed_mmre_to_plot)
 
     # MMRE
@@ -81,7 +81,7 @@ def main():
     save_as_graph(project,
                   "cumulated completed task forecasts MMRE",
                   "Date",
-                  'Signed MMRE',
+                  'MMRE',
                   mmre_to_plot)
 
     # MMRE Quality

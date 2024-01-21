@@ -41,10 +41,10 @@ def main():
     # USING TOTAL CUMULATED COMPLETED TASKS
     ################################################################################
 
-    actual_total_completed_tasks_per_day = project.activity.cumulated_completed_tasks
+    actual_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
 
-    all_estimates_to_plot: dict[str, CumulativeTimeSeries] = {"Actual": actual_total_completed_tasks_per_day}
+    all_estimates_to_plot: dict[str, CumulativeTimeSeries] = {"Reality": actual_total_completed_tasks_per_day}
     for n in [180, 360]:
         all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 

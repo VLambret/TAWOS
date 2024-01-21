@@ -1,6 +1,6 @@
 from datetime import date
 
-from time_series.indexed_dated_values import CumulativeTimeSeries, DatedValue
+from time_series.cumulative_time_series import CumulativeTimeSeries, DatedValue
 
 
 class TestIndexedDatedValues:

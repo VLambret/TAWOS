@@ -2,7 +2,7 @@ import math
 from datetime import date
 
 from time_series.normalized_time_series import NormalizedTimeSeries
-from time_series.indexed_dated_values import CumulativeTimeSeries
+from time_series.cumulative_time_series import CumulativeTimeSeries
 
 
 class NoEstimateForecast:

@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from pandas import date_range
 
-from time_series.indexed_dated_values import DatedValuesType, CumulativeTimeSeries
+from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSeries
 
 
 class NormalizedTimeSeries:

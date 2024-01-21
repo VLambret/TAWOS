@@ -7,7 +7,7 @@ from statistics import mean
 
 from graph import save_as_graph
 from time_series.normalized_time_series import NormalizedTimeSeries
-from time_series.indexed_dated_values import DatedValuesType, CumulativeTimeSeries
+from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSeries
 from forecasts.no_estimate_forecast import NoEstimateForecast
 from time_series.time_series import TimeSeries
 

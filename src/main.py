@@ -86,7 +86,7 @@ def main():
     save_as_graph(project,
                   "Average MMRE for each period",
                   "Date",
-                  'total completed issues',
+                  'Average MMRE',
                   mmre_quality)
 
 

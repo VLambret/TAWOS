@@ -2,7 +2,7 @@ RST=results
 
 .PHONY: all clean
 
-all:
+all: all_projects
 
 clean :
 
@@ -24,5 +24,20 @@ install_dependencies:
 
 mypy:
 	mypy src
+
+
+################################################################################
+# COMPUTE METRICS
+################################################################################
+
+PROJECT_FILES := $(wildcard projects/*)
+DONE_FILES := $(patsubst projects/%, projects/.%.done, $(PROJECT_FILES))
+
+#all_projects : $(DONE_FILES)
+all_projects : projects/.Spring_XD.done
+
+projects/.%.done: projects/%
+	@echo $<
+
 
 

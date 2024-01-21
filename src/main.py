@@ -41,24 +41,24 @@ def main():
     # USING TOTAL CUMULATED COMPLETED TASKS
     ################################################################################
 
-    actual_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
+    real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
 
-    all_estimates_to_plot: dict[str, CumulativeTimeSeries] = {"Reality": actual_total_completed_tasks_per_day}
+    all_estimates_to_plot: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}
     for n in [180, 360]:
         all_estimates_to_plot[f'{n} days'] = all_total_completed_tasks_per_day_estimates[n]
 
     save_as_graph(project, "cumulated completed task forecasts", all_estimates_to_plot)
 
     # Signed MMRE
-    signed_mmre_to_plot = compute_signed_mmre(actual_total_completed_tasks_per_day,
+    signed_mmre_to_plot = compute_signed_mmre(real_total_completed_tasks_per_day,
                                        all_estimates_to_plot)
     save_as_graph(project,
                   "cumulated completed task forecasts signed MMRE",
                   signed_mmre_to_plot)
 
     # MMRE
-    mmre_to_plot = compute_mmre(actual_total_completed_tasks_per_day,
+    mmre_to_plot = compute_mmre(real_total_completed_tasks_per_day,
                                 all_estimates_to_plot)
     save_as_graph(project,
                   "cumulated completed task forecasts MMRE",
@@ -67,7 +67,7 @@ def main():
     # MMRE Quality
     mmre_quality = {"MMRE quality": CumulativeTimeSeries(
         {
-            period: mean(values.compute_mmre_compared_to_reference(actual_total_completed_tasks_per_day).get_values())
+            period: mean(values.compute_mmre_compared_to_reference(real_total_completed_tasks_per_day).get_values())
             for period, values in all_total_completed_tasks_per_day_estimates.items()
         })
     }
@@ -88,7 +88,7 @@ def main():
 
     all_periodical_mmre: dict[str, CumulativeTimeSeries] = {}
     for period, estimates in all_total_completed_tasks_per_day_estimates.items():
-        periodical_reference = actual_total_completed_tasks_per_day.compute_completed_task_last_period(period)
+        periodical_reference = real_total_completed_tasks_per_day.compute_completed_task_last_period(period)
         periodical_tasks = estimates.compute_completed_task_last_period(period)
         periodical_mmre = periodical_tasks.compute_mmre_compared_to_reference(periodical_reference)
         all_periodical_mmre[f'{period} days'] = periodical_mmre
@@ -101,7 +101,7 @@ def main():
 
     all_periodical_mmre_quality = {"MMRE quality": CumulativeTimeSeries(
         {
-            period: mean(values.compute_mmre_compared_to_reference(actual_total_completed_tasks_per_day).get_values())
+            period: mean(values.compute_mmre_compared_to_reference(real_total_completed_tasks_per_day).get_values())
             for period, values in all_periodical_mmre.items()
         })
     }

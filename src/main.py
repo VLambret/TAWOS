@@ -11,14 +11,6 @@ from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSe
 from forecasts.no_estimate_forecast import NoEstimateForecast
 
 
-def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, CumulativeTimeSeries]:
-    all_data_to_plot = {
-        k: CumulativeTimeSeries(v)
-        for k, v in all_data_to_plot.items()
-    }
-    return all_data_to_plot
-
-
 class Project:
     def __init__(self, dates_in_csv_file: str):
         dates_in_csv_file = Path(dates_in_csv_file)
@@ -38,10 +30,22 @@ def main():
     project = Project(sys.argv[1])
 
     ################################################################################
-    # USING TOTAL CUMULATED COMPLETED TASKS
+    # REAL TOTAL CUMULATED CLOSED TASKS
     ################################################################################
 
     real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
+    reality: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}
+
+    save_as_graph(project,
+                  "real activity",
+                  "Date",
+                  'total completed issues',
+                  reality)
+
+    ################################################################################
+    # USING TOTAL CUMULATED COMPLETED TASKS
+    ################################################################################
+
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
 
     all_estimates_to_plot: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}

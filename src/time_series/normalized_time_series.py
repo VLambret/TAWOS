@@ -14,7 +14,7 @@ class NormalizedTimeSeries:
             completed_task_dates = sorted(completed_task_dates)
             percentage_to_remove = 1
             number_of_last_tasks_to_remove: int = int((len(completed_task_dates) * percentage_to_remove) / 100)
-            completed_task_dates = completed_task_dates[:-number_of_last_tasks_to_remove]
+            completed_task_dates = completed_task_dates[number_of_last_tasks_to_remove:-number_of_last_tasks_to_remove]
 
         self.first_day: date = min(completed_task_dates)
         self.last_day: date = max(completed_task_dates)

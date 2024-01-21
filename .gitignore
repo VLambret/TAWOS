@@ -2,3 +2,4 @@ TAWOS.sql
 *.png
 .coverage
 *.csv.done
+projects/*/*.json

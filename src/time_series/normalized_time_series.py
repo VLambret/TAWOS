@@ -7,14 +7,22 @@ from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSe
 
 
 class NormalizedTimeSeries:
-    def __init__(self, dates: list[date], filter=False):
-        self.first_day: date = min(dates)
-        self.last_day: date = max(dates)
+    def __init__(self, completed_task_dates: list[date], filter=False):
 
-        closed_tasks_per_day = dict(Counter(dates))
+        # Filter out last last project trail
+        if filter:
+            completed_task_dates = sorted(completed_task_dates)
+            percentage_to_remove = 1
+            number_of_last_tasks_to_remove: int = int((len(completed_task_dates) * percentage_to_remove) / 100)
+            completed_task_dates = completed_task_dates[:-number_of_last_tasks_to_remove]
+
+        self.first_day: date = min(completed_task_dates)
+        self.last_day: date = max(completed_task_dates)
+
+        closed_tasks_per_day = dict(Counter(completed_task_dates))
 
         # Filter out large number of closed tasks on a single day. Most likely an automated removal
-        if (filter):
+        if filter:
             for key, value in closed_tasks_per_day.items():
                 if value > 100:
                     closed_tasks_per_day[key] = 0

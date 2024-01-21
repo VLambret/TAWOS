@@ -26,6 +26,10 @@ def load_dates_from(project_csv: Path) -> list[date]:
         return [datetime.strptime(d.strip(), "%Y-%m-%d").date() for d in f.readlines()]
 
 
+def filter_anomalies(unfiltered_reality: CumulativeTimeSeries) -> CumulativeTimeSeries:
+    return unfiltered_reality
+
+
 def main():
     project = Project(sys.argv[1])
 
@@ -34,20 +38,21 @@ def main():
     ################################################################################
 
     real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
-    unfiltered_reality: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}
+    filtered_real_total_completed_tasks_per_day = filter_anomalies(real_total_completed_tasks_per_day)
 
+    unfiltered_reality: dict[str, CumulativeTimeSeries] = {
+        "Unfiltered": real_total_completed_tasks_per_day,
+        "Filtered": filtered_real_total_completed_tasks_per_day
+    }
     save_as_graph(project,
-                  "real activity (Unfiltered)",
+                  "real activity ",
                   "Date",
                   'total completed issues',
                   unfiltered_reality)
 
-    reality = unfiltered_reality
-    save_as_graph(project,
-                  "real activity (Filtered)",
-                  "Date",
-                  'total completed issues',
-                  reality)
+    reality = {
+        "Reality": filtered_real_total_completed_tasks_per_day
+    }
 
     ################################################################################
     # USING TOTAL CUMULATED COMPLETED TASKS

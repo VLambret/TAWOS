@@ -34,7 +34,6 @@ CSV_FILES := $(wildcard projects/*/*.csv)
 DONE_FILES := $(addsuffix .done, $(CSV_FILES))
 
 all_projects : $(DONE_FILES)
-	echo $<
 
 clean_projects:
 	rm -f projects/*/*.png
@@ -43,3 +42,10 @@ clean_projects:
 %.csv.done: %.csv
 	python3 src/main.py $<
 	touch $@
+
+metrics:
+	python3 src/merge_mmre_quality_json_files.py projects/*/*.json
+
+
+
+

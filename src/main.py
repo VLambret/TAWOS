@@ -85,47 +85,6 @@ def main():
                   'total completed issues',
                   mmre_quality)
 
-    ################################################################################
-    # USING COMPLETED TASK IN THE LAST PERIOD
-    ################################################################################
-
-    all_completed_tasks_in_last_period_estimates = compute_completed_task_last_period(all_estimates_to_plot)
-    save_as_graph(project,
-                  f"Tasks completed in the last period for each day",
-                  "Date",
-                  'total completed issues',
-                  all_completed_tasks_in_last_period_estimates)
-
-    # periodical MMRE
-
-    all_periodical_mmre: dict[str, CumulativeTimeSeries] = {}
-    for period, estimates in all_total_completed_tasks_per_day_estimates.items():
-        periodical_reference = real_total_completed_tasks_per_day.compute_completed_task_last_period(period)
-        periodical_tasks = estimates.compute_completed_task_last_period(period)
-        periodical_mmre = periodical_tasks.compute_mmre_compared_to_reference(periodical_reference)
-        all_periodical_mmre[f'{period} days'] = periodical_mmre
-
-    save_as_graph(project,
-                  "All periodical_mmre",
-                  "Date",
-                  'total completed issues',
-                  all_periodical_mmre)
-
-    # periodical MMRE quality
-
-    all_periodical_mmre_quality = {"MMRE quality": CumulativeTimeSeries(
-        {
-            period: mean(values.compute_mmre_compared_to_reference(real_total_completed_tasks_per_day).get_values())
-            for period, values in all_periodical_mmre.items()
-        })
-    }
-    save_as_graph(project,
-                  "Periodical MMRE quality",
-                  "Date",
-                  'total completed issues',
-                  all_periodical_mmre_quality)
-
-
 
 def compute_completed_task_last_period(all_estimates_to_plot):
 

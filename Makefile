@@ -30,17 +30,18 @@ mypy:
 # COMPUTE METRICS
 ################################################################################
 
-PROJECT_FILES := $(wildcard projects/*)
-DONE_FILES := $(patsubst projects/%, projects/.%.done, $(PROJECT_FILES))
+CSV_FILES := $(wildcard projects/*/*.csv)
+DONE_FILES := $(addsuffix .done, $(CSV_FILES))
 
-#all_projects : $(DONE_FILES)
-all_projects : projects/.Spring_XD.done
+all_projects : $(DONE_FILES)
+	echo $<
 
 clean_projects:
 	rm -f projects/*/*.png
+	rm -f projects/*/*.csv.done
 
-projects/.%.done: projects/%
-	python3 src/main.py $</*.csv
+%.csv.done: %.csv
+	python3 src/main.py $<
 	touch $@
 
 

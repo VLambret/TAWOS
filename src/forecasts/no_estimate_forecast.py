@@ -2,7 +2,7 @@ import math
 from datetime import date
 
 from time_series.normalized_time_series import NormalizedTimeSeries
-from time_series.indexed_dated_values import IndexedDatedValues
+from time_series.indexed_dated_values import CumulativeTimeSeries
 
 
 class NoEstimateForecast:
@@ -42,10 +42,10 @@ class NoEstimateForecast:
     def forecast_for_all_days_legacy(self) -> list[float]:
         return [float(v) for v in (self.forecast_for_all_days().get_values())]
 
-    def forecast_for_all_days(self) -> IndexedDatedValues:
+    def forecast_for_all_days(self) -> CumulativeTimeSeries:
         dates: list[date] = self.cumulative_flow.cumulated_completed_tasks.get_dates()
         result = {date_value: self.forecast_for_day(day + 1) for day, date_value in enumerate(dates)}
-        return IndexedDatedValues(result)
+        return CumulativeTimeSeries(result)
 
     def _get_velocity_on_day(self, forecast_day) -> float:
         first_day_of_velocity_interval = max(0, forecast_day - self.number_of_day_used_for_velocity)

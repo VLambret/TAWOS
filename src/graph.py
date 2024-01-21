@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-from time_series.indexed_dated_values import IndexedDatedValues
+from time_series.indexed_dated_values import CumulativeTimeSeries
 
 
-def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):
+def save_as_graph(project, title: str, all_data_to_plot: dict[str, CumulativeTimeSeries]):
     figure = Figure(figsize=(8, 6))
 
     filename = project.folder / (title.replace(' ', '_') + ".png")

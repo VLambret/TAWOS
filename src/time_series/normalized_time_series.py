@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from pandas import date_range
 
-from time_series.indexed_dated_values import DatedValuesType, IndexedDatedValues
+from time_series.indexed_dated_values import DatedValuesType, CumulativeTimeSeries
 
 
 class NormalizedTimeSeries:
@@ -23,7 +23,7 @@ class NormalizedTimeSeries:
             result[d] = total_completed_task
 
         self.total_closed_task_per_day: DatedValuesType = result
-        self.cumulated_completed_tasks: IndexedDatedValues = IndexedDatedValues(result)
+        self.cumulated_completed_tasks: CumulativeTimeSeries = CumulativeTimeSeries(result)
 
     def get_total_completed_task_on_day(self, day_number: int) -> int | float:
         date_from_day_number = self.first_day + timedelta(days=day_number - 1)

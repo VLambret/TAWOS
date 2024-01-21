@@ -13,7 +13,7 @@ class DatedValue:
     value: int | float
 
 
-class IndexedDatedValues:
+class CumulativeTimeSeries:
 
     def __init__(self, values: DatedValuesType):
         self.values: list[DatedValue] = [DatedValue(d, v) for d, v in values.items()]
@@ -22,7 +22,7 @@ class IndexedDatedValues:
         return self.values[day_number - 1]
 
     def __eq__(self, other):
-        if not isinstance(other, IndexedDatedValues):
+        if not isinstance(other, CumulativeTimeSeries):
             return False
 
         return self.values == other.values
@@ -33,23 +33,23 @@ class IndexedDatedValues:
     def get_values(self) -> list[int | float]:
         return [v.value for v in self.values]
 
-    def compute_mmre_compared_to_reference(self, reference: "IndexedDatedValues") -> "IndexedDatedValues":
+    def compute_mmre_compared_to_reference(self, reference: "CumulativeTimeSeries") -> "CumulativeTimeSeries":
         r = {}
         for index, v in enumerate(self.values):
             actual = reference.values[index].value
             compared = v.value
             r[v.date] = compute_mmre(actual, compared)
-        return IndexedDatedValues(r)
+        return CumulativeTimeSeries(r)
 
-    def compute_signed_mmre_compared_to_reference(self, reference: "IndexedDatedValues") -> "IndexedDatedValues":
+    def compute_signed_mmre_compared_to_reference(self, reference: "CumulativeTimeSeries") -> "CumulativeTimeSeries":
         r = {}
         for index, v in enumerate(self.values):
             actual = reference.values[index].value
             compared = v.value
             r[v.date] = compute_signed_mmre(actual, compared)
-        return IndexedDatedValues(r)
+        return CumulativeTimeSeries(r)
 
-    def compute_completed_task_last_period(self, period_in_days: int) -> "IndexedDatedValues":
+    def compute_completed_task_last_period(self, period_in_days: int) -> "CumulativeTimeSeries":
         r = {}
         for index, v in enumerate(self.values):
             period_start = index - period_in_days
@@ -59,4 +59,4 @@ class IndexedDatedValues:
             else:
                 start_value = self.values[period_start].value
             r[v.date] = v.value - start_value
-        return IndexedDatedValues(r)
+        return CumulativeTimeSeries(r)

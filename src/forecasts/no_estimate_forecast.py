@@ -15,13 +15,15 @@ class NoEstimateForecast:
         self.number_of_day_used_for_velocity = using_last_days
         self.number_of_days_in_the_future = on_the_next_days
         self.use_blind_spot_workaround = use_blind_spot_workaround
-        self.blind_spot_percent_to_use = 0.20
+        self.blind_spot_percent_to_use = 0.5
 
     def _forecast_on_day(self, forecast_day: int, number_of_days_in_the_future) -> float:
         if forecast_day <= 0:
             return 0.0
 
         total_closed_tasks_that_day = self.cumulative_flow.get_total_completed_task_on_day(forecast_day)
+        # We need at least a month to forecast
+
         velocity = self._get_velocity_on_day(forecast_day)
         return total_closed_tasks_that_day + velocity * number_of_days_in_the_future
 

@@ -12,7 +12,7 @@ def project_completing_exactly_one_task_each_day(project_duration):
     each_date_once_in_interval = [d.date() for d in date_range(
         start,
         start + timedelta(days=project_duration - 1),
-    )]
+        )]
 
     return NormalizedTimeSeries(each_date_once_in_interval)
 
@@ -92,14 +92,8 @@ class TestSpeedingUpProject_WithInitialWorkaround:
     @pytest.mark.parametrize("day, expected", [
         (1, 1.0),
         (2, 2.0),
-        (3, 3.0),
-        (4, 4.0),
-        (5, 5.0),
-        (6, 9.0),
-        (7, 10.5),
-        (8, 12.0),
-        (9, 13.5),
-        (10, 15.0),
+        (3, 4.5),
+        (4, 6.0),
     ])
     def test_internal_forecast_on_day(self, day, expected):
         assert self.project_speeding_up.forecast_for_day(day) == expected
@@ -108,19 +102,19 @@ class TestSpeedingUpProject_WithInitialWorkaround:
     def test_forecast_for_all_days(self):
         expected = [1.0,
                     2.0,
-                    3.0,
-                    4.0,
-                    5.0,
-                    9.0,
-                    10.5,
+                    4.5,
+                    6.0,
+                    10.0,
                     12.0,
-                    13.5,
-                    15.0,
-                    22.0,
-                    24.0,
-                    26.0,
-                    35.0,
-                    45.0,
+                    17.5,
+                    20.0,
+                    27.0,
+                    30.0,
+                    38.5,
+                    42.0,
+                    52.0,
+                    56.0,
+                    67.5,
                     56.0,
                     68.0,
                     81.0,

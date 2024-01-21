@@ -1,6 +1,8 @@
 import json
 import sys
 
+from matplotlib import pyplot as plt
+
 
 def aggregate_data(file_paths):
     aggregated_data = {}
@@ -14,6 +16,27 @@ def aggregate_data(file_paths):
 
     return aggregated_data
 
+def plot_boxplots(aggregated_data, output_file):
+    periods = list(next(iter(aggregated_data.values())).keys())
+
+    group_by_period = {
+        k: []
+        for k in periods
+    }
+
+    for project in aggregated_data.values():
+        for period, value in project.items():
+            group_by_period[period].append(value)
+
+    data_for_boxplot = list(group_by_period.values())
+
+    plt.boxplot(data_for_boxplot, labels=periods)
+    plt.xlabel('Period')
+    plt.ylabel('Metric Value')
+    plt.title('Boxplots for Each Period and Metric')
+
+    plt.savefig(output_file, dpi=300)
+
 
 def main():
     if len(sys.argv) < 2:
@@ -22,7 +45,7 @@ def main():
 
     file_paths = sys.argv[1:]
     aggregated_data_result = aggregate_data(file_paths)
-    print(json.dumps(aggregated_data_result, indent=4))
+    plot_boxplots(aggregated_data_result, "all_mmre_quality_per_period.png")
 
 
 if __name__ == "__main__":

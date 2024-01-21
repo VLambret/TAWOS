@@ -43,6 +43,3 @@ clean_projects:
 %.csv.done: %.csv
 	python3 src/main.py $<
 	touch $@
-
-
-

@@ -39,10 +39,14 @@ def main():
     project = Project(sys.argv[1])
 
     ################################################################################
-    # USING TOTAL CUMULATED COMPLETED TASKS
+    # REALITY
     ################################################################################
 
-    reality: TimeSeries
+    real_cumulated_closed_tasks: TimeSeries
+
+    ################################################################################
+    # USING TOTAL CUMULATED COMPLETED TASKS
+    ################################################################################
 
     actual_total_completed_tasks_per_day = project.activity.cumulated_completed_tasks
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)

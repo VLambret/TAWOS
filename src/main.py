@@ -34,10 +34,17 @@ def main():
     ################################################################################
 
     real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
-    reality: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}
+    unfiltered_reality: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}
 
     save_as_graph(project,
-                  "real activity",
+                  "real activity (Unfiltered)",
+                  "Date",
+                  'total completed issues',
+                  unfiltered_reality)
+
+    reality = unfiltered_reality
+    save_as_graph(project,
+                  "real activity (Filtered)",
                   "Date",
                   'total completed issues',
                   reality)

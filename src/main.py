@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-
+import json
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -25,6 +25,16 @@ class Project:
 def load_dates_from(project_csv: Path) -> list[date]:
     with project_csv.open('r') as f:
         return [datetime.strptime(d.strip(), "%Y-%m-%d").date() for d in f.readlines()]
+
+
+def save_as_json(project: Project, mmre_quality: dict[str, CumulativeTimeSeries]) -> None:
+    result: dict = {project.name: {
+        v.date :v.value
+        for v in mmre_quality['MMRE quality'].values
+    }}
+    with open(project.folder / 'mmre_quality.json', 'w') as json_file:
+        json.dump(result, json_file, indent=4, default=str)
+
 
 def main():
     project = Project(sys.argv[1])
@@ -98,6 +108,8 @@ def main():
                   "Date",
                   'Average MMRE',
                   mmre_quality)
+
+    save_as_json(project, mmre_quality)
 
 
 def compute_completed_task_last_period(all_estimates_to_plot):

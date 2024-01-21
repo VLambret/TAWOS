@@ -4,7 +4,7 @@ import pytest
 from pandas import date_range
 
 from model.normalized_time_series import NormalizedTimeSeries
-from forecast_methods.no_estimate_forecast import NoEstimateForecast
+from forecasts.no_estimate_forecast import NoEstimateForecast
 
 
 def project_completing_exactly_one_task_each_day(project_duration):

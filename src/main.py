@@ -8,7 +8,7 @@ from statistics import mean
 from graph import save_as_graph
 from model.normalized_time_series import NormalizedTimeSeries
 from model.indexed_dated_values import DatedValuesType, IndexedDatedValues
-from forecast_methods.no_estimate_forecast import NoEstimateForecast
+from forecasts.no_estimate_forecast import NoEstimateForecast
 
 
 def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, IndexedDatedValues]:

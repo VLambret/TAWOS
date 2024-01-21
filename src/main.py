@@ -9,7 +9,6 @@ from graph import save_as_graph
 from time_series.normalized_time_series import NormalizedTimeSeries
 from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSeries
 from forecasts.no_estimate_forecast import NoEstimateForecast
-from time_series.time_series import TimeSeries
 
 
 def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, CumulativeTimeSeries]:

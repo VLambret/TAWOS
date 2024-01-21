@@ -13,6 +13,12 @@ class NormalizedTimeSeries:
 
         closed_tasks_per_day = dict(Counter(dates))
 
+        # Filter out large number of closed tasks on a single day. Most likely an automated removal
+        if (filter):
+            for key, value in closed_tasks_per_day.items():
+                if value > 100:
+                    closed_tasks_per_day[key] = 0
+
         project_range = [d.date() for d in date_range(self.first_day, self.last_day)]
 
         result: DatedValuesType = {d: 0 for d in project_range}

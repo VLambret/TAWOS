@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import date
 from typing import Dict
@@ -18,7 +17,6 @@ class CumulativeTimeSeries:
 
     def __init__(self, values: DatedValuesType):
         self.values: list[DatedValue] = [DatedValue(d, v) for d, v in values.items()]
-        self.values2: OrderedDict[date: float] = OrderedDict()
 
     def __getitem__(self, day_number):
         return self.values[day_number - 1]

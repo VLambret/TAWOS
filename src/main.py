@@ -33,11 +33,13 @@ def main():
     # REAL TOTAL CUMULATED CLOSED TASKS
     ################################################################################
 
-    real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
+    unfiltered_real_total_completed_tasks_per_day: CumulativeTimeSeries = project.activity.cumulated_completed_tasks
     filtered_real_total_completed_tasks_per_day: CumulativeTimeSeries = project.filtered_activity.cumulated_completed_tasks
+    real_total_completed_tasks_per_day = filtered_real_total_completed_tasks_per_day
+
 
     unfiltered_reality: dict[str, CumulativeTimeSeries] = {
-        "Unfiltered": real_total_completed_tasks_per_day,
+        "Unfiltered": unfiltered_real_total_completed_tasks_per_day,
         "Filtered": filtered_real_total_completed_tasks_per_day
     }
     save_as_graph(project,
@@ -54,7 +56,7 @@ def main():
     # USING TOTAL CUMULATED COMPLETED TASKS
     ################################################################################
 
-    all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)
+    all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.filtered_activity)
 
     all_estimates_to_plot: dict[str, CumulativeTimeSeries] = {"Reality": real_total_completed_tasks_per_day}
     for n in [180, 360]:

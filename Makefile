@@ -4,7 +4,7 @@ RST=results
 
 all: all_projects
 
-clean :
+clean : clean_projects
 
 .PHONY : test pytest pylint coverage mypy
 
@@ -35,6 +35,9 @@ DONE_FILES := $(patsubst projects/%, projects/.%.done, $(PROJECT_FILES))
 
 #all_projects : $(DONE_FILES)
 all_projects : projects/.Spring_XD.done
+
+clean_projects:
+	rm -f projects/*/*.png
 
 projects/.%.done: projects/%
 	@echo $<

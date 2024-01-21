@@ -1,4 +1,5 @@
 from collections import OrderedDict
 from datetime import date
 
-TypeSeries = OrderedDict[date: float]
+TimeSeries = OrderedDict[date: float]
+

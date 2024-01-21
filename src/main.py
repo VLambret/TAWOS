@@ -9,6 +9,7 @@ from graph import save_as_graph
 from time_series.normalized_time_series import NormalizedTimeSeries
 from time_series.indexed_dated_values import DatedValuesType, IndexedDatedValues
 from forecasts.no_estimate_forecast import NoEstimateForecast
+from time_series.time_series import TimeSeries
 
 
 def old_to_new(all_data_to_plot: dict[str, DatedValuesType]) -> dict[str, IndexedDatedValues]:
@@ -40,6 +41,8 @@ def main():
     ################################################################################
     # USING TOTAL CUMULATED COMPLETED TASKS
     ################################################################################
+
+    reality: TimeSeries
 
     actual_total_completed_tasks_per_day = project.activity.cumulated_completed_tasks
     all_total_completed_tasks_per_day_estimates = get_all_total_completed_tasks_per_day_estimates(project.activity)

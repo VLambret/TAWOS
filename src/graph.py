@@ -4,7 +4,7 @@ from matplotlib.figure import Figure
 from time_series.cumulative_time_series import CumulativeTimeSeries
 
 
-def save_as_graph(project, title: str, x_label, all_data_to_plot: dict[str, CumulativeTimeSeries]):
+def save_as_graph(project, title: str, x_label, y_label, all_data_to_plot: dict[str, CumulativeTimeSeries]):
     figure = Figure(figsize=(8, 6))
 
     filename = project.folder / (title.replace(' ', '_') + ".png")
@@ -12,7 +12,7 @@ def save_as_graph(project, title: str, x_label, all_data_to_plot: dict[str, Cumu
     figure_axis = figure.add_subplot()
     figure.suptitle(f"{project.name} - {title}")
     figure_axis.set_xlabel(x_label)
-    figure_axis.set_ylabel('total completed issues')
+    figure_axis.set_ylabel(y_label)
 
     for label, data in all_data_to_plot.items():
         estimates_dates = data.get_dates()

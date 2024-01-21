@@ -6,8 +6,8 @@ from pathlib import Path
 from statistics import mean
 
 from graph import save_as_graph
-from model.normalized_time_series import NormalizedTimeSeries
-from model.indexed_dated_values import DatedValuesType, IndexedDatedValues
+from time_series.normalized_time_series import NormalizedTimeSeries
+from time_series.indexed_dated_values import DatedValuesType, IndexedDatedValues
 from forecasts.no_estimate_forecast import NoEstimateForecast
 
 

@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import pytest
 from pandas import date_range
 
-from model.normalized_time_series import NormalizedTimeSeries
+from time_series.normalized_time_series import NormalizedTimeSeries
 from forecasts.no_estimate_forecast import NoEstimateForecast
 
 

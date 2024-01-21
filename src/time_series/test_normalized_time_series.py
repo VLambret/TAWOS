@@ -1,7 +1,7 @@
 from datetime import date
 
-from model.normalized_time_series import NormalizedTimeSeries
-from model.indexed_dated_values import DatedValuesType
+from time_series.normalized_time_series import NormalizedTimeSeries
+from time_series.indexed_dated_values import DatedValuesType
 
 
 class TestCumulativeFlow:

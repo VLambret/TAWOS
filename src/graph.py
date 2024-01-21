@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-from model.indexed_dated_values import IndexedDatedValues
+from time_series.indexed_dated_values import IndexedDatedValues
 
 
 def save_as_graph(project, title: str, all_data_to_plot: dict[str, IndexedDatedValues]):

@@ -1,8 +1,8 @@
 import math
 from datetime import date
 
-from model.normalized_time_series import NormalizedTimeSeries
-from model.indexed_dated_values import IndexedDatedValues
+from time_series.normalized_time_series import NormalizedTimeSeries
+from time_series.indexed_dated_values import IndexedDatedValues
 
 
 class NoEstimateForecast:

@@ -112,21 +112,6 @@ def main() -> None:
     save_as_json(project, mmre_quality)
 
 
-def compute_completed_task_last_period(all_estimates_to_plot):
-
-    def period(key: str):
-        if "days" in key:
-            return int(key.removesuffix("days"))
-        else:
-            return 360
-
-    estimates_with_periodic_total = {
-        k: v.compute_completed_task_last_period(period(k))
-        for k, v in all_estimates_to_plot.items()
-    }
-    return estimates_with_periodic_total
-
-
 def compute_mmre(reference: CumulativeTimeSeries, estimates: dict[str, CumulativeTimeSeries]) -> dict[str, CumulativeTimeSeries]:
     return {
         tag: estimate.compute_mmre_compared_to_reference(reference) for tag, estimate

@@ -3,9 +3,8 @@ import json
 import sys
 from datetime import date, datetime
 from pathlib import Path
-from statistics import mean
 
-from evaluation_tools.metrics import compute_mmre, compute_signed_mmre
+from evaluation_tools.metrics import compute_mmre, compute_signed_mmre, compute_mmre_quality
 from graph import save_as_graph
 from time_series.normalized_time_series import NormalizedTimeSeries
 from time_series.cumulative_time_series import CumulativeTimeSeries
@@ -98,12 +97,7 @@ def main() -> None:
                   mmre_to_plot)
 
     # MMRE Quality
-    mmre_quality = {"MMRE quality": CumulativeTimeSeries(
-        {
-            period: mean(values.compute_mmre_compared_to_reference(real_total_completed_tasks_per_day).get_values())
-            for period, values in all_total_completed_tasks_per_day_estimates.items()
-        })
-    }
+    mmre_quality = compute_mmre_quality(all_total_completed_tasks_per_day_estimates, real_total_completed_tasks_per_day)
 
     save_as_graph(project,
                   "Average MMRE for each period",

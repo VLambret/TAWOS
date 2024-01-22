@@ -5,9 +5,10 @@ from datetime import date, datetime
 from pathlib import Path
 from statistics import mean
 
+from evaluation_tools.metrics import compute_mmre, compute_signed_mmre
 from graph import save_as_graph
 from time_series.normalized_time_series import NormalizedTimeSeries
-from time_series.cumulative_time_series import DatedValuesType, CumulativeTimeSeries
+from time_series.cumulative_time_series import CumulativeTimeSeries
 from forecasts.no_estimate_forecast import NoEstimateForecast
 
 
@@ -80,7 +81,7 @@ def main() -> None:
 
     # Signed MMRE
     signed_mmre_to_plot = compute_signed_mmre(real_total_completed_tasks_per_day,
-                                       all_estimates_to_plot)
+                                              all_estimates_to_plot)
     save_as_graph(project,
                   "cumulated completed task forecasts signed MMRE",
                   "Date",
@@ -103,6 +104,7 @@ def main() -> None:
             for period, values in all_total_completed_tasks_per_day_estimates.items()
         })
     }
+
     save_as_graph(project,
                   "Average MMRE for each period",
                   "Date",
@@ -110,22 +112,6 @@ def main() -> None:
                   mmre_quality)
 
     save_as_json(project, mmre_quality)
-
-
-def compute_mmre(reference: CumulativeTimeSeries, estimates: dict[str, CumulativeTimeSeries]) -> dict[str, CumulativeTimeSeries]:
-    return {
-        tag: estimate.compute_mmre_compared_to_reference(reference) for tag, estimate
-        in
-        estimates.items()
-    }
-
-
-def compute_signed_mmre(reference, estimates):
-    return {
-        tag: estimate.compute_signed_mmre_compared_to_reference(reference) for tag, estimate
-        in
-        estimates.items()
-    }
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

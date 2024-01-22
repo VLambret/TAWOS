@@ -13,11 +13,11 @@ from forecasts.no_estimate_forecast import NoEstimateForecast
 
 class Project:
     def __init__(self, dates_in_csv_file: str):
-        dates_in_csv_file = Path(dates_in_csv_file)
-        dates = load_dates_from(dates_in_csv_file)
+        dates_in_csv_file_path: Path = Path(dates_in_csv_file)
+        dates = load_dates_from(dates_in_csv_file_path)
 
-        self.folder: Path = dates_in_csv_file.parent
-        self.name = dates_in_csv_file.name.replace('_', " ").removesuffix(".csv")
+        self.folder: Path = dates_in_csv_file_path.parent
+        self.name = dates_in_csv_file_path.name.replace('_', " ").removesuffix(".csv")
         self.activity = NormalizedTimeSeries(dates)
         self.filtered_activity = NormalizedTimeSeries(dates, filter=True)
 
@@ -127,7 +127,7 @@ def compute_completed_task_last_period(all_estimates_to_plot):
     return estimates_with_periodic_total
 
 
-def compute_mmre(reference, estimates):
+def compute_mmre(reference: CumulativeTimeSeries, estimates: dict[str, CumulativeTimeSeries]) -> dict[str, CumulativeTimeSeries]:
     return {
         tag: estimate.compute_mmre_compared_to_reference(reference) for tag, estimate
         in

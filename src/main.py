@@ -36,7 +36,7 @@ def save_as_json(project: Project, mmre_quality: dict[str, CumulativeTimeSeries]
         json.dump(result, json_file, indent=4, default=str)
 
 
-def main():
+def main() -> None:
     project = Project(sys.argv[1])
 
     ################################################################################
@@ -145,7 +145,7 @@ def compute_signed_mmre(reference, estimates):
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):
     estimate_periods = [1, 5, 10, 20, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720]
-    all_estimates: dict[int: CumulativeTimeSeries] = {
+    all_estimates: dict[int, CumulativeTimeSeries] = {
         period: NoEstimateForecast(project_activity, period, period).forecast_for_all_days()
         for period in estimate_periods
     }

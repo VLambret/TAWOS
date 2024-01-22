@@ -1,5 +1,6 @@
 import json
 import sys
+from typing import List
 
 from matplotlib import pyplot as plt
 
@@ -16,10 +17,10 @@ def aggregate_data(file_paths):
 
     return aggregated_data
 
-def plot_boxplots(aggregated_data, output_file):
+def plot_boxplots(aggregated_data, output_file) -> None:
     periods = list(next(iter(aggregated_data.values())).keys())
 
-    group_by_period = {
+    group_by_period: dict[int, List[float]] = {
         k: []
         for k in periods
     }

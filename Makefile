@@ -23,7 +23,7 @@ install_dependencies:
 	pip install -r requirements.txt
 
 mypy:
-	mypy src
+	mypy --check-untyped-defs src
 
 
 ################################################################################

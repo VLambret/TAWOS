@@ -4,7 +4,7 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 
-from evaluation_tools.metrics import compute_mmre, compute_signed_mmre, compute_mmre_quality
+from evaluation_tools.metrics import compute_mmre, compute_signed_mmre, compute_mmre_quality, compute_all_risk_being_late
 from graph import save_as_graph
 from time_series.normalized_time_series import NormalizedTimeSeries
 from time_series.cumulative_time_series import CumulativeTimeSeries
@@ -97,7 +97,8 @@ def main() -> None:
                   mmre_to_plot)
 
     # MMRE Quality
-    mmre_quality = compute_mmre_quality(all_total_completed_tasks_per_day_estimates, real_total_completed_tasks_per_day)
+    mmre_quality = compute_mmre_quality(all_total_completed_tasks_per_day_estimates,
+                                        real_total_completed_tasks_per_day)
 
     save_as_graph(project,
                   "Average MMRE for each period",
@@ -106,6 +107,18 @@ def main() -> None:
                   mmre_quality)
 
     save_as_json(project, mmre_quality, 'mmre_quality.json')
+
+    # Risk being late
+    risk_being_late = compute_all_risk_being_late(all_total_completed_tasks_per_day_estimates,
+                                                  real_total_completed_tasks_per_day)
+
+    save_as_graph(project,
+                  "Average MMRE for each period",
+                  "Date",
+                  'Average MMRE',
+                  risk_being_late)
+
+    save_as_json(project, risk_being_late, 'risk_being_late.json')
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

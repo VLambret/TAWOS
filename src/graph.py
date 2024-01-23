@@ -17,6 +17,7 @@ def save_as_graph(project, title: str, x_label, y_label, all_data_to_plot: dict[
     figure_axis.set_ylabel(y_label)
 
     for label, data in all_data_to_plot.items():
+        # TODO: make all data to plot a dict and not a CumulativeTimeSeries
         estimates_dates = data.get_dates()
         estimates_values = data.get_values()
         figure_axis.plot(estimates_dates, estimates_values, label=label)

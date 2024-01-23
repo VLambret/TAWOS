@@ -27,12 +27,12 @@ def load_dates_from(project_csv: Path) -> list[date]:
         return [datetime.strptime(d.strip(), "%Y-%m-%d").date() for d in f.readlines()]
 
 
-def save_as_json(project: Project, mmre_quality: dict[str, CumulativeTimeSeries]) -> None:
+def save_as_json(project: Project, mmre_quality: dict[str, CumulativeTimeSeries], file_name) -> None:
     result: dict = {project.name: {
         v.date :v.value
         for v in mmre_quality['MMRE quality'].values
     }}
-    with open(project.folder / 'mmre_quality.json', 'w') as json_file:
+    with open(project.folder / file_name, 'w') as json_file:
         json.dump(result, json_file, indent=4, default=str)
 
 
@@ -105,7 +105,7 @@ def main() -> None:
                   'Average MMRE',
                   mmre_quality)
 
-    save_as_json(project, mmre_quality)
+    save_as_json(project, mmre_quality, 'mmre_quality.json')
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

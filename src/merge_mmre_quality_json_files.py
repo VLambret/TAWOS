@@ -32,9 +32,9 @@ def plot_boxplots(aggregated_data, output_file) -> None:
     data_for_boxplot = list(group_by_period.values())
 
     plt.boxplot(data_for_boxplot, labels=periods)
-    plt.xlabel('Period')
-    plt.ylabel('Metric Value')
-    plt.title('Boxplots for Each Period and Metric')
+    plt.xlabel('Forecast interval')
+    plt.ylabel('Mean Magnitude of Relative Error')
+    plt.title('projects MMRE per forecast interval')
 
     plt.savefig(output_file, dpi=300)
 

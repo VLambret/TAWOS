@@ -113,17 +113,17 @@ def main() -> None:
 
     save_as_json_old(project, mmre_quality, 'mmre_quality.json')
 
-    # Risk being late
-    risk_being_late = compute_all_risk_being_late(all_total_completed_tasks_per_day_estimates,
-                                                  real_total_completed_tasks_per_day)
+    ## Risk being late
+    #risk_being_late = compute_all_risk_being_late(all_total_completed_tasks_per_day_estimates,
+    #                                              real_total_completed_tasks_per_day)
 
-    save_as_graph(project,
-                  "Risk being late",
-                  "Date",
-                  'Average MMRE',
-                      risk_being_late)
+    #save_as_graph(project,
+    #              "Risk being late",
+    #              "Date",
+    #              'Average MMRE',
+    #                  risk_being_late)
 
-    save_as_json(project, risk_being_late, 'risk_being_late.json')
+    #save_as_json(project, risk_being_late, 'risk_being_late.json')
 
 
 def get_all_total_completed_tasks_per_day_estimates(project_activity):

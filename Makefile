@@ -37,6 +37,7 @@ all_projects : $(DONE_FILES)
 
 clean_projects:
 	rm -f projects/*/*.png
+	rm -f projects/*/*.json
 	rm -f projects/*/*.csv.done
 
 %.csv.done: %.csv

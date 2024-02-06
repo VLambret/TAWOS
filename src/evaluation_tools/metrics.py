@@ -31,6 +31,7 @@ def compute_mmre_quality(all_total_completed_tasks_per_day_estimates, real_total
 
 
 def compute_risk_being_late(param) -> float:
+    assert False
     return 12.7
 
 
